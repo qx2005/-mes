@@ -1,0 +1,45 @@
+opt/dataease2.0/data/
+opt/dataease2.0/logs/
+
+# Runtime / local data
+**/logs/
+**/*.log
+**/*.pid
+mysql/data/
+mysql-8.0.30/data/
+pgsql/data/
+activemq/data/
+opt/dataease2.0/logs/
+nginx-1.22.1/logs/
+
+# Large binaries (GitHub file limit 100MB) ?? obtain separately for full deployment
+*.jar
+jdk/
+jdk-21/
+
+# Bundled middleware (too large for GitHub; use official installers or release assets)
+mysql/
+mysql-8.0.30/
+pgsql/
+activemq/
+Redis/
+minio/
+tools/
+
+# Extracted JAR artifacts at repo root
+BOOT-INF/
+META-INF/
+classpath
+.instance_id
+
+# Temp scripts from frontend patching sessions
+_*.py
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Optional: keep dist_mes.zip out if dist_mes/ is tracked
+# dist_mes.zip
