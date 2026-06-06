@@ -1,17 +1,16 @@
 # BSQ 工业互联网平台运行包（GitHub 精简版）
 
-本仓库为 sq_usr 运行包的 **可版本管理部分**。因 GitHub 单文件 100MB 限制，以下大体积组件 **未纳入 Git**，需本地保留或另行下载：
+本仓库为 bsq_usr 运行包的 **可版本管理部分**。因 GitHub 单文件 100MB 限制，以下大体积组件 **未纳入 Git**，需本地保留或另行下载：
 
-- sq-admin.jar、	hingsboard.jar、CoreApplication.jar
+- bsq-admin.jar、thingsboard.jar、CoreApplication.jar
 - jdk/、jdk-21/
-- mysql/、mysql-8.0.30/、pgsql/、ctivemq/、Redis/、minio/、	ools/
+- mysql/、mysql-8.0.30/、pgsql/、activemq/、Redis/、minio/、tools/
 
 ## 仓库内包含
 
 - 启动脚本（*.bat）
 - MES 前端 dist_mes/（含生产排产页定制）
-- Nginx 配置 
-ginx-1.22.1/
+- Nginx 配置 nginx-1.22.1/
 - DataEase 配置 opt/dataease2.0/config/
 - 项目说明 项目说明文档.md
 
