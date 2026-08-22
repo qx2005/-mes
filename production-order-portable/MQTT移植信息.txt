@@ -1,0 +1,125 @@
+﻿BSQ 工业互联网平台 — MQTT 移植信息
+====================================
+来源：bsq_usr 运行包（只读分析，供新项目融合使用）
+生成说明：生产下单 → PUT /mes/pro/protask/{workorderId} → MQTT SubTopic1 → 产线启动
+
+
+一、MES 后端 MQTT 配置（bsq-admin / application.yml）
+------------------------------------------------------
+配置路径：spring.mqtt
+
+  enabled       = true
+  hostUrl       = tcp://127.0.0.1:1893
+  username      = bsqmes
+  password      = 123456
+  clientId      = ${random.int}    （每次连接随机客户端 ID）
+  defaultTopic  = PubTopic1        （MES 启动时订阅的主题）
+  timeout       = 100              （秒）
+  keepalive     = 60               （秒）
+
+YAML 示例：
+
+  spring:
+    mqtt:
+      username: bsqmes
+      password: 123456
+      hostUrl: tcp://127.0.0.1:1893
+      clientId: ${random.int}
+      defaultTopic: PubTopic1
+      timeout: 100
+      keepalive: 60
+      enabled: true
+
+
+二、MQTT Broker（ActiveMQ）
+---------------------------
+配置文件：activemq/conf/activemq.xml
+启动脚本：01MQTTRun.bat
+
+  协议        MQTT
+  端口        1893
+  监听        mqtt://0.0.0.0:1893
+  Web 管理台  http://127.0.0.1:8161/admin  （默认 admin / admin）
+
+注意：ActiveMQ 自带 users.properties 仅有 admin=admin；
+      MES 实际连接使用 yml 中的 bsqmes / 123456，
+      移植时请在 Broker 中配置同名账号。
+
+
+三、产线启动（下单）MQTT 行为 — 最重要
+--------------------------------------
+触发接口：PUT /mes/pro/protask/{workorderId}
+
+  发布主题    SubTopic1          （代码写死，不是 PubTopic1）
+  QoS         0
+  Retain      true
+
+前端逻辑：
+  1. GET /mes/pro/workorder/list  拉工单列表
+  2. 取列表最后一条的 workorderId
+  3. PUT /mes/pro/protask/{workorderId}
+  4. 后端向 SubTopic1 发布启动报文
+
+前端「品类 / 数量」不参与 MQTT，仅 UI 展示。
+
+
+四、SubTopic1 报文格式（JSON 字符串）
+-------------------------------------
+Topic: SubTopic1
+
+{
+  "rw_prot": {
+    "Ver": "1.0.1",
+    "dir": "down",
+    "id": "12345",
+    "w_data": [
+      { "name": "produce",          "value": "1" },
+      { "name": "plan_pty",         "value": "<计划数量-已产数量>" }
+    ]
+  }
+}
+
+字段说明：
+  produce     = 1        产线启动信号（开始开关）
+  plan_pty    = 数值     来自 pro_workorder 表 quantity - quantity_produced
+
+
+五、主题分工（勿混淆）
+----------------------
+  PubTopic1   MES 连接后订阅（defaultTopic）
+  SubTopic1   点「下单」时 MES 发布产线启动指令
+
+移植时：ThingsBoard / 设备 / 规则链必须订阅或转发 SubTopic1，
+        并解析 rw_prot.w_data 中 produce=1，产线才会运行。
+
+
+六、ThingsBoard（参考，与 ActiveMQ 非同一 Broker）
+-------------------------------------------------
+  HTTP 端口     8090
+  自带 MQTT     1883    （与 ActiveMQ 1893 不同）
+
+本项目中 MES 发往 ActiveMQ:1893 → SubTopic1；
+ThingsBoard 需通过规则链/集成接收该消息并驱动设备。
+
+
+七、移植用 bridge .env 示例
+---------------------------
+（若使用 production-order-portable/bridge）
+
+  MQTT_ENABLED=true
+  MQTT_HOST=tcp://127.0.0.1:1893
+  MQTT_USERNAME=bsqmes
+  MQTT_PASSWORD=123456
+  MQTT_PUBLISH_TOPIC=SubTopic1
+  MQTT_QOS=0
+  MQTT_RETAIN=true
+
+
+八、移植前检查清单
+------------------
+  [ ] ActiveMQ MQTT 1893 已启动
+  [ ] 账号 bsqmes / 123456 在新 Broker 可用
+  [ ] 订阅方监听 SubTopic1
+  [ ] 能解析 produce=1 启动信号
+  [ ] MySQL pro_workorder 表至少有一条工单
+  [ ] 前端 /prod-api/ 反代到 8080（bridge 或 bsq-admin）

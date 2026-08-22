@@ -1,0 +1,12 @@
+# MQTT config snippet for bsq-admin application.yml
+# 若使用原版 bsq-admin.jar，合并以下配置
+bsq:
+  mqtt:
+    username: bsqmes
+    password: 123456
+    hostUrl: tcp://127.0.0.1:1893
+    clientId: ${random.int}
+    defaultTopic: PubTopic1
+    timeout: 100
+    keepalive: 60
+    enabled: true

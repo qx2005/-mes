@@ -35,6 +35,16 @@ classpath
 # Temp scripts from frontend patching sessions
 _*.py
 
+# Local backups and review artifacts
+*.bak
+docx_review*/
+docx_review_final/
+docx_review_final_v2/
+docx_review_final_v3/
+docx_review_original/
+production-order-portable.zip
+软件设计师_工作副本.docx
+
 # OS / IDE
 .DS_Store
 Thumbs.db
