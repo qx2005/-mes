@@ -47,13 +47,7 @@ ping 127.0.0.1 -n 11 >nul
 set install.data_dir=%startDir%\data
 start java -jar thingsboard.jar
 
-rem 启动大数据控制台
-ping -n 11 127.0.0.1 >nul
-@echo 正在启动大数据控制台服务...
-set JAVA_HOME=%startDir%\jdk-21
-set PATH=%JAVA_HOME%/bin;%JAVA_HOME%/jdk/bin
 chcp 65001
-start java -jar -Dfile.encoding=utf-8 CoreApplication.jar
 
 rem 启动平台UI
 ping 127.0.0.1 -n 11 >nul
