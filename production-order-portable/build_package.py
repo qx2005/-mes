@@ -171,7 +171,6 @@ export default {
               '\u4ea7\u7ebf\u542f\u52a8\u6307\u4ee4\u5df2\u4e0b\u53d1\uff0c\u5df2\u9009' + selected.name + '\uff0c\u6570\u91cf' + quantity
             )
             this.$emit('order-success', payload)
-            this.orderForm.quantity = 1
           })
           .catch(err => {
             if (err !== 'cancel' && err !== 'close') {
@@ -225,7 +224,7 @@ integration = (
     + "`powershell scripts/verify-stack.ps1`\n"
 )
 
-VUE.write_text(template + script + style, encoding="utf-8")
-(ROOT / "README.md").write_text(readme, encoding="utf-8")
-(ROOT / "INTEGRATION.md").write_text(integration, encoding="utf-8")
-print("done")
+# ProductionOrderPanel.vue and its documentation are now maintained directly so
+# the flexible-scheduling presentation layer is not replaced by this legacy
+# bootstrap template.
+print("legacy bootstrap skipped; maintained files preserved")

@@ -1,0 +1,28 @@
+{
+  "folders": [
+    {
+      "name": "Production Scheduling Engine",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/*.jar": true,
+      "**/*.exe": true,
+      "**/*.dll": true,
+      "**/*.lib": true,
+      "**/*.pdb": true,
+      "**/*.gz": true
+    },
+    "search.exclude": {
+      "**/*.jar": true,
+      "**/*.exe": true,
+      "**/*.dll": true,
+      "**/*.lib": true,
+      "**/*.pdb": true,
+      "**/*.gz": true
+    },
+    "editor.formatOnSave": false,
+    "workbench.startupEditor": "none"
+  }
+}

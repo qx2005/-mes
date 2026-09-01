@@ -1,0 +1,15 @@
+[submodule "dashboard-materials/components/DataV"]
+	path = dashboard-materials/components/DataV
+	url = https://github.com/DataV-Team/DataV.git
+[submodule "dashboard-materials/components/countUp.js"]
+	path = dashboard-materials/components/countUp.js
+	url = https://github.com/inorganik/countUp.js.git
+[submodule "dashboard-materials/components/echarts-liquidfill"]
+	path = dashboard-materials/components/echarts-liquidfill
+	url = https://github.com/ecomfe/echarts-liquidfill.git
+[submodule "dashboard-materials/components/v-scale-screen-vue2"]
+	path = dashboard-materials/components/v-scale-screen-vue2
+	url = https://github.com/Alfred-Skyblue/v-scale-screen.git
+[submodule "dashboard-materials/references/vue2-datav"]
+	path = dashboard-materials/references/vue2-datav
+	url = https://github.com/huwenwu2017/vue2-datav.git

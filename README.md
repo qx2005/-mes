@@ -9,9 +9,9 @@
 ## 仓库内包含
 
 - 启动 / 停止脚本（`*.bat`）
-- MES 前端 `dist_mes/`（Coinbase 风格主题、生产下单页品类图）
+- MES 前端 `dist_mes/`（工业主题、柔性排产页品类图）
 - Nginx 配置 `nginx-1.22.1/`
-- 生产下单移植包 `production-order-portable/`
+- 柔性排产移植包 `production-order-portable/`（复用原生产下单执行链路）
 - UI 设计参考 `DESIGN.md`
 - 项目说明 `项目说明文档.md`
 
