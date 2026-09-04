@@ -31,8 +31,8 @@
 
 首页进入专属沉浸模式时会隐藏顶部白色导航栏和标签栏，使数据大屏占满浏览器高度；离开首页进入其他业务模块时，原导航会自动恢复。左侧业务菜单仍然保留。
 
-- Vue 2 首页模块：`dist_mes/static/js/chunk-7ea63fd3.video145620.js`
-- 首页样式：`dist_mes/static/css/industrial-dashboard-modern.css`
+- Vue 2 首页模块：`dist_mes/static/js/chunk-7ea63fd3.restored20260902.js`
+- 首页样式：`dist_mes/static/css/industrial-dashboard-restored.css`
 - 大屏样式：`dist_mes/static/css/industrial-dashboard.css`
 - 两个文件对应的 Gzip 版本已同步生成。
 - 入口 chunk 映射已改用独立的 `video20260901` 资源名，避免旧布局缓存。
@@ -42,6 +42,7 @@
 - 数据模块按 MES 业务链重构为接单、待排产、计划产量、准交率、订单执行、产线负荷、今日排产、交付与齐套风险、计划/实际产出和工单执行。
 - 左上角识别模块已改为“啤酒智能罐装 / 柔性排产中心”，并使用代码绘制的罐体标识。
 - 大屏视觉升级为现代玻璃拟态企业看板：圆角弱边框、分层阴影、状态胶囊、柔和渐变与低干扰图表，移除传统四角描边式大屏装饰。
+- 首页进入时会隔离全局 Carbon 主题并隐藏后台侧栏，退出首页后自动恢复；顶部品牌块和时间已移除，状态改为“数据库在线”。
 - 当前数值仍为布局演示数据，下一阶段再连接 MES/MQTT 实时接口。
 
 替换前的文件保存在 `dist_mes` 对应目录，文件名包含 `before-home-reset-20260831`、`before-home-cache-bust-20260831` 或 `before-industrial-dashboard-20260831`，需要时可以恢复。

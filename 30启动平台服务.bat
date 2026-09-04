@@ -1,4 +1,4 @@
-title=Ò»¼üÆô¶¯BSQ-MES
+title=Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½BSQ-MES
 
 cd /d %~dp0
 set startDir=%cd%

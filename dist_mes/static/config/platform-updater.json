@@ -1,0 +1,12 @@
+{
+  "productName": "智能罐装柔性排产平台",
+  "currentVersion": "3.8.2",
+  "manifestUrl": "/updates/latest.json",
+  "downloadSeconds": 2,
+  "installSeconds": 16,
+  "developerAccount": "admin01",
+  "developerPassword": "123456",
+  "ideUrl": "/ide",
+  "ideWorkspaceName": "MES 源码隔离工作区",
+  "ideMode": "simulation"
+}

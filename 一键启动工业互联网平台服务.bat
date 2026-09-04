@@ -1,57 +1,68 @@
 @echo off
-title=Ò»¼üÆô¶¯ ¹¤Òµ»¥ÁªÍøÆ½Ì¨
+title=Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½Ì¨
 
 cd /d %~dp0
 set startDir=%cd%
 set JAVA_HOME=%startDir%\jdk
 set PATH=%JAVA_HOME%/bin;%JAVA_HOME%/jre/bin
 
-rem Æô¶¯MQTT·þÎñ
+rem ï¿½ï¿½ï¿½ï¿½MQTTï¿½ï¿½ï¿½ï¿½
 ping 127.0.0.1 -n 11 >nul
-@echo ÕýÔÚÆô¶¯MQTT·þÎñ... 
+@echo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MQTTï¿½ï¿½ï¿½ï¿½... 
 start %startDir%\01MQTTRun.bat
 
-rem Æô¶¯Í¼Æ¬¸½¼þ·þÎñ
+rem ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 ping -n 11 127.0.0.1 >nul
-@echo ÕýÔÚÆô¶¯Í¼Æ¬¸½¼þ·þÎñ...
+@echo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½...
 start  %startDir%\02minIORun.bat
 
-rem Æô¶¯Redis·þÎñ
+rem ï¿½ï¿½ï¿½ï¿½Redisï¿½ï¿½ï¿½ï¿½
 ping 127.0.0.1 -n 11 >nul
-@echo ÕýÔÚÆô¶¯Redis·þÎñ...
+@echo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Redisï¿½ï¿½ï¿½ï¿½...
 start  %startDir%\10RedisRun.bat
 
-rem Æô¶¯MySQL·þÎñ
+rem ï¿½ï¿½ï¿½ï¿½MySQLï¿½ï¿½ï¿½ï¿½
 ping -n 11 127.0.0.1 >nul
-@echo ÕýÔÚÆô¶¯MySQL·þÎñ...
+@echo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MySQLï¿½ï¿½ï¿½ï¿½...
 start  %startDir%\20MySQLRun.bat
 
-rem Æô¶¯MySQL8·þÎñ
+rem ï¿½ï¿½ï¿½ï¿½MySQL8ï¿½ï¿½ï¿½ï¿½
 ping -n 11 127.0.0.1 >nul
-@echo ÕýÔÚÆô¶¯MySQL·þÎñ...
+@echo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MySQLï¿½ï¿½ï¿½ï¿½...
 start  %startDir%\20MySQL8Run.bat
 
-rem Æô¶¯pgsql·þÎñ
+rem ï¿½ï¿½ï¿½ï¿½pgsqlï¿½ï¿½ï¿½ï¿½
 ping 127.0.0.1 -n 11 >nul
-@echo ÕýÔÚÆô¶¯pgsql·þÎñ...
+@echo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½pgsqlï¿½ï¿½ï¿½ï¿½...
 start  %startDir%\21pgsqlRun.bat
 
-rem Æô¶¯Æ½Ì¨·þÎñ
+rem ï¿½ï¿½ï¿½ï¿½Æ½Ì¨ï¿½ï¿½ï¿½ï¿½
 ping -n 11 127.0.0.1 >nul
-@echo ÕýÔÚÆô¶¯Æ½Ì¨·þÎñ...
+@echo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½Ì¨ï¿½ï¿½ï¿½ï¿½...
 start java -jar bsq-admin.jar
 
-rem Æô¶¯IOT¿ØÖÆÌ¨
+rem ï¿½ï¿½ï¿½ï¿½IOTï¿½ï¿½ï¿½ï¿½Ì¨
 ping 127.0.0.1 -n 11 >nul
-@echo ÕýÔÚÆô¶¯IOT¿ØÖÆÌ¨·þÎñ...
+@echo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½IOTï¿½ï¿½ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½...
 set install.data_dir=%startDir%\data
 start java -jar thingsboard.jar
 
+rem Start the DataEase production dashboard used by the platform homepage
+ping 127.0.0.1 -n 11 >nul
+@echo Starting DataEase dashboard service...
+set JAVA_HOME=%startDir%\jdk-21
+set PATH=%JAVA_HOME%\bin;%JAVA_HOME%\jdk\bin
+start "" /D "%startDir%\opt" "%startDir%\jdk-21\bin\java.exe" -Dfile.encoding=utf-8 -jar "%startDir%\CoreApplication.jar"
+
 chcp 65001
 
-rem Æô¶¯Æ½Ì¨UI
+rem ï¿½ï¿½ï¿½ï¿½Æ½Ì¨UI
 ping 127.0.0.1 -n 11 >nul
-@echo ÕýÔÚÆô¶¯Æ½Ì¨UI·þÎñ...
+@echo ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½Ì¨UIï¿½ï¿½ï¿½ï¿½...
 start  %startDir%\40UIRun.bat
+
+rem Start the isolated Eclipse Theia online IDE (optional; MES remains available if it fails)
+@echo Starting embedded Theia IDE on 127.0.0.1:3188...
+start "" /min powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%startDir%\tools\start_embedded_theia.ps1"
 
 exit

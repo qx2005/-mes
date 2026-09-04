@@ -1,0 +1,1306 @@
+:root {
+  --pu-blue: #155eef;
+  --pu-blue-dark: #0b3fa6;
+  --pu-blue-soft: #eaf1ff;
+  --pu-bg: #f3f6fb;
+  --pu-surface: #fff;
+  --pu-text: #15223b;
+  --pu-muted: #6b778c;
+  --pu-border: #dce3ee;
+  --pu-green: #17a673;
+  --pu-red: #d92d20;
+  --pu-orange: #f59e0b;
+}
+
+/* The standalone ThingsBoard console is not part of this MES workflow. */
+#cloud {
+  display: none !important;
+}
+
+#platform-updater-menu-entry {
+  display: flex !important;
+  align-items: center;
+  margin-top: 4px !important;
+  cursor: pointer;
+}
+
+#platform-updater-menu-entry::after {
+  content: 'DEV';
+  margin-left: auto;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(21, 94, 239, .16);
+  color: #7ca8ff;
+  font: 700 9px/1.5 'Segoe UI', sans-serif;
+  letter-spacing: .5px;
+}
+
+.platform-ide-dialog {
+  width: min(1420px, 97vw);
+  height: min(850px, 94vh);
+}
+
+.platform-workspace-tabs {
+  display: flex;
+  height: 58px;
+  padding: 0 24px;
+  gap: 4px;
+  border-bottom: 1px solid var(--pu-border);
+  background: #fff;
+}
+
+.platform-workspace-tabs button {
+  position: relative;
+  display: grid;
+  min-width: 210px;
+  padding: 9px 18px 8px 42px;
+  border: 0;
+  background: transparent;
+  color: #667085;
+  text-align: left;
+  cursor: pointer;
+}
+
+.platform-workspace-tabs button > i { position: absolute; left: 17px; top: 20px; font-size: 16px; }
+.platform-workspace-tabs button span { color: #344054; font-size: 13px; font-weight: 700; }
+.platform-workspace-tabs button small { margin-top: 2px; font-size: 10px; }
+.platform-workspace-tabs button::after { content: ''; position: absolute; right: 12px; bottom: -1px; left: 12px; height: 3px; border-radius: 3px 3px 0 0; background: transparent; }
+.platform-workspace-tabs button.is-active { background: #f5f8ff; color: var(--pu-blue); }
+.platform-workspace-tabs button.is-active span { color: var(--pu-blue); }
+.platform-workspace-tabs button.is-active::after { background: var(--pu-blue); }
+
+[data-workspace-page][hidden] { display: none !important; }
+
+.platform-ide-main {
+  display: grid;
+  grid-template-columns: 220px minmax(480px, 1fr);
+  height: calc(100% - 142px);
+  min-height: 0;
+  background: #eef2f8;
+}
+
+.platform-ide-explorer,
+.platform-deploy-panel {
+  min-width: 0;
+  padding: 18px;
+  overflow: auto;
+  background: #f8faff;
+}
+
+.platform-ide-explorer { border-right: 1px solid var(--pu-border); }
+.platform-deploy-panel { border-left: 1px solid var(--pu-border); }
+
+.platform-deploy-page {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  height: calc(100% - 142px);
+  min-height: 0;
+  background: #eef2f8;
+}
+
+.platform-deploy-page .platform-deploy-panel { border-right: 1px solid var(--pu-border); border-left: 0; }
+.platform-page-badge { padding: 3px 7px; border-radius: 99px; background: #e8f8f1; color: #087a52; font: 700 8px/1.4 'Segoe UI', sans-serif; letter-spacing: .5px; }
+.platform-deploy-workspace { display: grid; min-width: 0; min-height: 0; grid-template-rows: auto auto auto auto minmax(150px, 1fr); gap: 12px; padding: 18px; overflow: auto; }
+.platform-deploy-hero { display: flex; align-items: flex-start; justify-content: space-between; padding: 20px 22px; border-radius: 13px; background: linear-gradient(125deg, #132b54, #155eef); color: #fff; box-shadow: 0 8px 24px rgba(21,94,239,.18); }
+.platform-deploy-hero span { color: #9fc1ff; font: 700 9px/1 'Segoe UI', sans-serif; letter-spacing: 1.2px; }
+.platform-deploy-hero h3 { margin: 7px 0 5px; font-size: 19px; }
+.platform-deploy-hero p { max-width: 610px; margin: 0; color: #dce8ff; font-size: 11px; line-height: 1.6; }
+.platform-deploy-hero > strong { flex: none; padding: 7px 11px; border-radius: 99px; background: rgba(255,255,255,.12); font-size: 10px; }
+.platform-deploy-hero > strong i { display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%; background: #fdb022; }
+.platform-deploy-hero > strong.is-ready i,
+.platform-deploy-hero > strong.is-running i { background: #6ce9a6; box-shadow: 0 0 0 4px rgba(108,233,166,.14); }
+
+.platform-service-continuity { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border: 1px solid #a6e8cf; border-radius: 10px; background: #effcf6; }
+.platform-service-continuity > span { display: grid; grid-template-columns: 10px auto; align-items: center; column-gap: 8px; }
+.platform-service-continuity i { width: 8px; height: 8px; border-radius: 50%; background: #12b76a; box-shadow: 0 0 0 4px rgba(18,183,106,.13); }
+.platform-service-continuity strong { color: #087a52; font-size: 11px; }
+.platform-service-continuity small { grid-column: 2; color: #438a70; font-size: 9px; }
+.platform-service-continuity > b { padding: 4px 8px; border-radius: 99px; background: #d8f7e9; color: #087a52; font-size: 9px; }
+.platform-runtime-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.platform-runtime-cards article { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 14px; border: 1px solid var(--pu-border); border-radius: 11px; background: #fff; }
+.platform-runtime-cards article > i { display: grid; place-items: center; width: 36px; height: 36px; flex: none; border-radius: 9px; background: #eaf1ff; color: var(--pu-blue); font-size: 17px; }
+.platform-runtime-cards article div { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
+.platform-runtime-cards span,
+.platform-runtime-cards small { color: var(--pu-muted); font-size: 9px; }
+.platform-runtime-cards strong { overflow: hidden; color: #263650; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+
+.platform-deploy-flow { padding: 16px 18px; border: 1px solid var(--pu-border); border-radius: 12px; background: #fff; }
+.platform-deploy-flow h4 { margin: 0 0 13px; color: #344054; font-size: 12px; }
+.platform-deploy-flow > div { display: flex; align-items: center; overflow-x: auto; padding-bottom: 2px; }
+.platform-deploy-flow > div > span { display: grid; min-width: 112px; flex: 1; grid-template-columns: 30px 1fr; grid-template-rows: auto auto; align-items: center; }
+.platform-deploy-flow b { grid-row: 1 / 3; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #eaf1ff; color: var(--pu-blue); font-size: 9px; }
+.platform-deploy-flow strong { color: #344054; font-size: 10px; }
+.platform-deploy-flow small { color: var(--pu-muted); font-size: 9px; }
+.platform-deploy-flow > div > i { margin: 0 8px; color: #98baff; font-size: 19px; font-style: normal; }
+
+.platform-deploy-log-card { display: flex; min-height: 0; flex-direction: column; padding: 15px; border: 1px solid var(--pu-border); border-radius: 12px; background: #fff; }
+.platform-deploy-log-card header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; font-size: 12px; }
+.platform-deploy-log-card header button { border: 0; background: transparent; color: var(--pu-blue); cursor: pointer; }
+.platform-deploy-log-card .platform-log { min-height: 120px; }
+
+.platform-ide-panel-title,
+.platform-editor-toolbar,
+.platform-console-card > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.platform-ide-panel-title { margin-bottom: 18px; font-size: 13px; }
+.platform-ide-panel-title button,
+.platform-editor-toolbar button,
+.platform-console-card header button {
+  border: 0;
+  background: transparent;
+  color: var(--pu-blue);
+  cursor: pointer;
+}
+
+.platform-project-name {
+  margin-bottom: 8px;
+  color: #344054;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.platform-file {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  height: 38px;
+  padding: 0 9px 0 18px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #475467;
+  text-align: left;
+  cursor: pointer;
+}
+
+.platform-file:hover { background: #edf3ff; }
+.platform-file.is-active { background: #dfebff; color: #0f52cc; }
+.platform-file span { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.platform-file b { color: #98a2b3; font: 9px/1 Consolas, monospace; }
+
+.platform-plugin-summary {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--pu-border);
+  font-size: 11px;
+}
+
+.platform-plugin-summary > span { color: var(--pu-muted); font-weight: 700; }
+.platform-plugin-summary dl { margin: 12px 0 0; }
+.platform-plugin-summary dl div { display: flex; justify-content: space-between; margin: 10px 0; }
+.platform-plugin-summary dt { color: var(--pu-muted); }
+.platform-plugin-summary dd { margin: 0; color: #344054; font-weight: 600; }
+
+.platform-ide-editor {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  grid-template-rows: 48px minmax(260px, 1fr) 27px 190px;
+  background: #111827;
+}
+
+.platform-editor-toolbar {
+  padding: 0 16px;
+  border-bottom: 1px solid #293548;
+  background: #172033;
+  color: #d8e1f0;
+  font-size: 12px;
+}
+
+.platform-editor-toolbar > div { display: flex; align-items: center; gap: 9px; }
+.platform-editor-toolbar small { color: #8290a6; }
+.platform-editor-toolbar button { padding: 7px 10px; border-radius: 6px; color: #b8c5d9; }
+.platform-editor-toolbar button:hover { background: #25324a; color: #fff; }
+.platform-editor-dot { width: 8px; height: 8px; border-radius: 50%; background: #f7c948; }
+
+.platform-code-wrap { position: relative; display: grid; min-height: 0; grid-template-columns: 52px minmax(0, 1fr); overflow: hidden; }
+.platform-line-numbers {
+  overflow: hidden;
+  padding: 16px 10px;
+  border-right: 1px solid #293548;
+  color: #5f6e85;
+  background: #101827;
+  font: 13px/1.65 Consolas, monospace;
+  text-align: right;
+  user-select: none;
+}
+.platform-line-numbers span { display: block; }
+.platform-code-wrap textarea {
+  width: 100%;
+  height: 100%;
+  resize: none;
+  padding: 16px 18px;
+  border: 0;
+  outline: 0;
+  color: #d9e2f1;
+  background: #101827;
+  caret-color: #79a7ff;
+  font: 13px/1.65 Consolas, 'Courier New', monospace;
+  tab-size: 2;
+  white-space: pre;
+}
+
+.platform-editor-status {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 0 14px;
+  background: #155eef;
+  color: #e8f0ff;
+  font-size: 10px;
+}
+.platform-editor-status span:first-child { margin-right: auto; }
+.platform-editor-status i { display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%; background: #6ce9a6; }
+
+.platform-console-card { display: flex; min-height: 0; flex-direction: column; padding: 12px 14px 14px; background: #fff; }
+.platform-console-card > header { margin-bottom: 8px; font-size: 12px; }
+.platform-console-card .platform-log { border-radius: 7px; font-size: 11px; }
+
+.platform-simulation-note {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 11px;
+  border: 1px solid #b9d1ff;
+  border-radius: 9px;
+  background: #edf4ff;
+  color: #174ea6;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.platform-deploy-panel label { display: block; margin: 13px 0; color: #475467; font-size: 11px; font-weight: 600; }
+.platform-deploy-panel input {
+  width: 100%;
+  height: 36px;
+  margin-top: 6px;
+  padding: 0 10px;
+  border: 1px solid var(--pu-border);
+  border-radius: 7px;
+  outline: 0;
+  background: #fff;
+  color: #24324a;
+}
+.platform-deploy-panel input:focus { border-color: var(--pu-blue); box-shadow: 0 0 0 3px rgba(21,94,239,.09); }
+
+.platform-deploy-checks { margin: 18px 0 16px; border-top: 1px solid var(--pu-border); }
+.platform-deploy-checks > div { display: flex; align-items: center; gap: 8px; padding: 12px 2px; border-bottom: 1px solid #e9edf4; font-size: 11px; }
+.platform-deploy-checks i { width: 9px; height: 9px; border-radius: 50%; background: #cbd5e1; }
+.platform-deploy-checks span { flex: 1; color: #475467; }
+.platform-deploy-checks b { color: #98a2b3; font-size: 10px; }
+.platform-deploy-checks .is-running i { background: var(--pu-orange); box-shadow: 0 0 0 4px rgba(245,158,11,.12); }
+.platform-deploy-checks .is-passed i { background: var(--pu-green); }
+.platform-deploy-checks .is-passed b { color: var(--pu-green); }
+.platform-deploy-checks .is-failed i { background: var(--pu-red); }
+.platform-deploy-checks .is-failed b { color: var(--pu-red); }
+
+.platform-deploy-progress { display: flex; align-items: center; gap: 8px; margin: 12px 0; }
+.platform-deploy-progress > div { height: 7px; flex: 1; overflow: hidden; border-radius: 99px; background: #e4e9f1; }
+.platform-deploy-progress i { display: block; width: 0; height: 100%; background: linear-gradient(90deg, #155eef, #42a5ff); transition: width .08s linear; }
+.platform-deploy-progress span { width: 32px; color: var(--pu-blue); font-size: 10px; text-align: right; }
+.platform-check-button,
+.platform-deploy-button { width: 100%; margin-top: 9px; }
+.platform-deploy-result { min-height: 30px; margin: 12px 0 0; color: var(--pu-muted); font-size: 10px; line-height: 1.5; text-align: center; }
+.platform-deploy-result strong { color: var(--pu-green); }
+
+@media (max-width: 1050px) {
+  .platform-ide-main { grid-template-columns: 190px minmax(430px, 1fr); }
+  .platform-deploy-page { grid-template-columns: 285px minmax(440px, 1fr); }
+}
+
+.platform-updater-layer,
+.platform-updater-layer * {
+  box-sizing: border-box;
+}
+
+.platform-updater-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 30000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  font-family: 'Microsoft YaHei UI', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+  color: var(--pu-text);
+}
+
+.platform-updater-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 13, 28, .72);
+  backdrop-filter: blur(7px);
+  animation: platform-fade-in .18s ease-out;
+}
+
+.platform-layer-close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--pu-muted);
+  font: 400 28px/34px 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: .18s ease;
+}
+
+.platform-layer-close:hover {
+  background: #eef2f7;
+  color: var(--pu-text);
+}
+
+.platform-login-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(460px, 100%);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .25);
+  border-radius: 22px;
+  background: var(--pu-surface);
+  box-shadow: 0 28px 80px rgba(3, 10, 24, .42);
+  animation: platform-dialog-in .22s ease-out;
+}
+
+.platform-login-dialog > .platform-layer-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+}
+
+.platform-login-brand {
+  display: flex;
+  justify-content: center;
+  padding: 34px 0 12px;
+}
+
+.platform-login-brand span,
+.platform-center-title > span {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 15px;
+  background: linear-gradient(145deg, #2474ff, #0d4fe0);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(21, 94, 239, .28);
+  font-size: 23px;
+}
+
+.platform-login-copy {
+  padding: 0 42px;
+  text-align: center;
+}
+
+.platform-login-copy small {
+  color: var(--pu-blue);
+  font: 700 10px/1 'Segoe UI', sans-serif;
+  letter-spacing: 1.5px;
+}
+
+.platform-login-copy h2 {
+  margin: 9px 0 8px;
+  font-size: 24px;
+  line-height: 1.35;
+}
+
+.platform-login-copy p {
+  margin: 0;
+  color: var(--pu-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.platform-login-form {
+  padding: 25px 42px 30px;
+}
+
+.platform-login-form label {
+  display: block;
+  margin-bottom: 17px;
+}
+
+.platform-login-form label > span {
+  display: block;
+  margin-bottom: 7px;
+  color: #344054;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.platform-login-form label > div {
+  display: flex;
+  align-items: center;
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--pu-border);
+  border-radius: 10px;
+  background: #fbfcfe;
+  transition: .18s ease;
+}
+
+.platform-login-form label > div:focus-within {
+  border-color: var(--pu-blue);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(21, 94, 239, .11);
+}
+
+.platform-login-form label i {
+  margin-right: 10px;
+  color: #98a2b3;
+  font-size: 16px;
+}
+
+.platform-login-form input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--pu-text);
+  font: 14px/1.4 inherit;
+}
+
+.platform-login-message {
+  min-height: 22px;
+  margin: -3px 0 9px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.platform-login-message.error { color: var(--pu-red); }
+.platform-login-message.success { color: var(--pu-green); }
+.platform-login-message.loading { color: var(--pu-blue); }
+
+.platform-primary-button,
+.platform-secondary-button {
+  min-height: 42px;
+  padding: 0 24px;
+  border-radius: 10px;
+  font: 600 14px/1 inherit;
+  cursor: pointer;
+  transition: .18s ease;
+}
+
+.platform-primary-button {
+  border: 1px solid var(--pu-blue);
+  background: var(--pu-blue);
+  color: #fff;
+  box-shadow: 0 7px 16px rgba(21, 94, 239, .2);
+}
+
+.platform-primary-button:hover:not(:disabled) { background: var(--pu-blue-dark); }
+.platform-primary-button:disabled { cursor: not-allowed; opacity: .58; }
+
+.platform-secondary-button {
+  border: 1px solid var(--pu-border);
+  background: #fff;
+  color: var(--pu-text);
+}
+
+.platform-secondary-button:hover:not(:disabled) { background: var(--pu-blue-soft); }
+.platform-secondary-button:disabled { cursor: not-allowed; opacity: .48; }
+
+.platform-login-submit { width: 100%; }
+
+.platform-login-dialog footer {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  padding: 15px 26px;
+  background: #f7f9fc;
+  color: var(--pu-muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.platform-login-dialog footer i {
+  margin-top: 2px;
+  color: var(--pu-blue);
+}
+
+.platform-center-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(1120px, 96vw);
+  height: min(780px, 92vh);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 20px;
+  background: var(--pu-bg);
+  box-shadow: 0 30px 90px rgba(3, 10, 24, .46);
+  animation: platform-dialog-in .22s ease-out;
+}
+
+.platform-center-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 84px;
+  padding: 0 26px;
+  background: linear-gradient(115deg, #155eef, #0c47bd);
+  color: #fff;
+}
+
+.platform-center-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.platform-center-title > span {
+  width: 46px;
+  height: 46px;
+  background: rgba(255, 255, 255, .16);
+  box-shadow: none;
+}
+
+.platform-center-title h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 21px;
+}
+
+.platform-center-title p {
+  margin: 4px 0 0;
+  color: #dce7ff;
+  font: 11px/1.4 'Segoe UI', sans-serif;
+}
+
+.platform-center-header > div:last-child {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.platform-center-header em {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #d9fbea;
+  color: #087a52;
+  font: 700 10px/1.4 'Segoe UI', sans-serif;
+  letter-spacing: .7px;
+  font-style: normal;
+}
+
+.platform-center-header .platform-layer-close {
+  color: #dce7ff;
+}
+
+.platform-center-header .platform-layer-close:hover {
+  background: rgba(255, 255, 255, .14);
+  color: #fff;
+}
+
+.platform-center-main {
+  display: grid;
+  grid-template-columns: 310px minmax(0, 1fr);
+  gap: 18px;
+  height: calc(100% - 84px);
+  padding: 20px;
+}
+
+.platform-version-card,
+.platform-status-card,
+.platform-log-card {
+  border: 1px solid var(--pu-border);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(16, 24, 40, .04);
+}
+
+.platform-version-card {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  padding: 22px;
+  overflow: auto;
+}
+
+.platform-version-card h3,
+.platform-log-card h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.platform-version-card dl {
+  margin: 18px 0 0;
+}
+
+.platform-version-card dl div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 11px 0;
+}
+
+.platform-version-card dt,
+.platform-package > span,
+.platform-release > span {
+  color: var(--pu-muted);
+  font-size: 12px;
+}
+
+.platform-version-card dd {
+  margin: 0;
+  font: 700 16px/1 'Segoe UI', sans-serif;
+}
+
+.platform-version-card dd.is-latest { color: var(--pu-blue); }
+
+.platform-package {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 17px;
+  border-top: 1px solid var(--pu-border);
+}
+
+.platform-package[hidden],
+.platform-release[hidden] {
+  display: none !important;
+}
+
+.platform-package strong {
+  overflow-wrap: anywhere;
+  font: 600 12px/1.5 'Segoe UI', sans-serif;
+}
+
+.platform-package small { color: var(--pu-muted); }
+
+.platform-release { margin-top: 20px; }
+
+.platform-release ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: #344054;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.platform-release li { margin: 6px 0; }
+.platform-release li::marker { color: var(--pu-blue); }
+
+.platform-safe-tip {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  margin-top: auto;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--pu-blue-soft);
+  color: var(--pu-blue-dark);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.platform-safe-tip i { margin-top: 2px; }
+
+.platform-update-workspace {
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 18px;
+}
+
+.platform-status-card { padding: 24px; }
+
+.platform-status-heading {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+}
+
+.platform-status-heading > i {
+  width: 10px;
+  height: 10px;
+  margin-top: 7px;
+  border-radius: 50%;
+  background: var(--pu-orange);
+  box-shadow: 0 0 0 5px rgba(245, 158, 11, .12);
+}
+
+.platform-status-heading h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.platform-status-heading p {
+  margin: 5px 0 0;
+  color: var(--pu-muted);
+  font-size: 12px;
+}
+
+.platform-progress {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-top: 23px;
+}
+
+.platform-progress > div {
+  height: 12px;
+  flex: 1;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e5eaf2;
+}
+
+.platform-progress > div > i {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #155eef, #4386ff);
+  transition: width .1s linear;
+}
+
+.platform-progress strong {
+  width: 46px;
+  color: var(--pu-blue);
+  font: 700 14px/1 'Segoe UI', sans-serif;
+  text-align: right;
+}
+
+.platform-transfer {
+  min-height: 18px;
+  margin: 9px 0 18px;
+  color: var(--pu-muted);
+  font-size: 11px;
+}
+
+.platform-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.platform-log-card {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  padding: 18px;
+}
+
+.platform-log-card > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 11px;
+}
+
+.platform-log-card > header button {
+  border: 0;
+  background: transparent;
+  color: var(--pu-blue);
+  cursor: pointer;
+}
+
+.platform-log {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  padding: 13px 15px;
+  border-radius: 10px;
+  background: #101828;
+  color: #d0d5dd;
+  font: 12px/1.75 Consolas, 'Courier New', monospace;
+}
+
+.platform-log .success { color: #6ce9a6; }
+.platform-log .warning { color: #fec84b; }
+
+@keyframes platform-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes platform-dialog-in {
+  from { opacity: 0; transform: translateY(10px) scale(.985); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 820px) {
+  .platform-center-dialog { height: 94vh; overflow: auto; }
+  .platform-center-main { display: block; height: auto; }
+  .platform-version-card { margin-bottom: 16px; }
+  .platform-update-workspace { display: block; }
+  .platform-log-card { height: 280px; margin-top: 16px; }
+}
+
+@media (max-width: 520px) {
+  .platform-updater-layer { padding: 10px; }
+  .platform-login-copy,
+  .platform-login-form { padding-left: 24px; padding-right: 24px; }
+  .platform-center-header { padding: 0 15px; }
+  .platform-center-title > span { display: none; }
+  .platform-center-header em { display: none; }
+  .platform-center-main { padding: 12px; }
+}
+
+/* Embedded Eclipse Theia workspace. The iframe remains mounted while switching pages. */
+.platform-theia-dialog {
+  display: grid;
+  grid-template-rows: 84px 58px minmax(0, 1fr);
+}
+
+.platform-theia-page {
+  display: grid;
+  min-height: 0;
+  grid-template-rows: 48px minmax(0, 1fr) 34px;
+  background: #eef2f8;
+}
+
+.platform-theia-toolbar,
+.platform-theia-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--pu-border);
+  background: #fff;
+}
+
+.platform-theia-toolbar { padding: 0 15px; }
+.platform-theia-toolbar > div { display: flex; align-items: center; gap: 12px; }
+.platform-theia-toolbar > div:first-child { min-width: 0; }
+.platform-theia-toolbar strong { display: flex; align-items: center; gap: 7px; color: #344054; font-size: 11px; }
+.platform-theia-toolbar strong i { width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; box-shadow: 0 0 0 4px rgba(245,158,11,.12); }
+.is-theia-ready .platform-theia-toolbar strong i { background: #17a673; box-shadow: 0 0 0 4px rgba(23,166,115,.12); }
+.is-theia-error .platform-theia-toolbar strong i { background: #d92d20; box-shadow: 0 0 0 4px rgba(217,45,32,.12); }
+.platform-theia-toolbar small { overflow: hidden; color: #98a2b3; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.platform-theia-toolbar button,
+.platform-theia-error button {
+  height: 30px;
+  padding: 0 11px;
+  border: 1px solid #cbd9f2;
+  border-radius: 6px;
+  background: #f7f9fc;
+  color: #155eef;
+  font-size: 10px;
+  cursor: pointer;
+}
+.platform-theia-toolbar button:hover,
+.platform-theia-error button:hover { border-color: #155eef; background: #edf4ff; }
+
+.platform-theia-frame-wrap { position: relative; min-width: 0; min-height: 0; overflow: hidden; background: #101827; }
+.platform-theia-frame-wrap iframe { display: block; width: 100%; height: 100%; border: 0; background: #101827; }
+.platform-theia-loading,
+.platform-theia-error {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 9px;
+  background: #f6f8fc;
+  color: #667085;
+  font-size: 11px;
+}
+.platform-theia-loading[hidden],
+.platform-theia-error[hidden] { display: none !important; }
+.platform-theia-loading > i,
+.platform-theia-error > i { color: #155eef; font-size: 30px; }
+.platform-theia-error > i { color: #d92d20; }
+.platform-theia-loading strong,
+.platform-theia-error strong { color: #24324a; font-size: 14px; }
+
+.platform-theia-footer { padding: 0 14px; border-top: 1px solid var(--pu-border); border-bottom: 0; color: #667085; font-size: 9px; }
+.platform-theia-footer span:first-child { color: #155eef; }
+.platform-theia-footer i { margin-right: 4px; }
+.platform-deploy-source { margin: 14px 0 4px; padding: 10px; border: 1px solid #dce3ee; border-radius: 8px; background: #fff; }
+.platform-deploy-source span,
+.platform-deploy-source small { display: block; color: #98a2b3; font-size: 9px; }
+.platform-deploy-source strong { display: block; margin: 5px 0 3px; color: #344054; font-size: 11px; }
+
+@media (max-width: 900px) {
+  .platform-theia-toolbar small { display: none; }
+  .platform-theia-footer span:first-child { max-width: 65%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+
+/* The online IDE is a full application page, not a centered modal. */
+.platform-fullpage-layer {
+  display: block;
+  padding: 0;
+  background: #eef2f8;
+}
+
+.platform-fullpage-layer .platform-theia-dialog {
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  animation: none;
+}
+
+.platform-fullpage-back {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
+  gap: 6px;
+  border: 1px solid rgba(255,255,255,.42);
+  border-radius: 8px;
+  background: rgba(255,255,255,.10);
+  color: #fff;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.platform-fullpage-back:hover { background: rgba(255,255,255,.20); }
+
+@media (max-width: 820px) {
+  .platform-fullpage-layer .platform-theia-dialog { height: 100vh; overflow: hidden; }
+}
+
+/* Compact integrated IDE chrome: one top bar, maximum editor height. */
+.platform-fullpage-layer .platform-theia-dialog {
+  grid-template-rows: 64px minmax(0, 1fr);
+}
+
+.platform-ide-unified-header {
+  display: grid;
+  height: 64px;
+  padding: 0 18px;
+  grid-template-columns: minmax(230px, 300px) auto minmax(390px, 1fr);
+  gap: 18px;
+  background: linear-gradient(110deg, #1459e5 0%, #0e49bd 58%, #0a378e 100%);
+  box-shadow: 0 2px 10px rgba(7, 35, 91, .22);
+}
+
+.platform-ide-unified-header .platform-center-title { min-width: 0; gap: 10px; }
+.platform-ide-unified-header .platform-center-title > span {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  font-size: 18px;
+}
+.platform-ide-unified-header .platform-center-title h2 { font-size: 17px; }
+.platform-ide-unified-header .platform-center-title p {
+  overflow: hidden;
+  max-width: 230px;
+  margin-top: 2px;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.platform-ide-unified-header .platform-workspace-tabs {
+  align-self: stretch;
+  height: auto;
+  padding: 0;
+  gap: 5px;
+  border: 0;
+  background: transparent;
+}
+.platform-ide-unified-header .platform-workspace-tabs button {
+  display: flex;
+  min-width: 112px;
+  padding: 0 14px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
+  color: #dbe8ff;
+  text-align: center;
+}
+.platform-ide-unified-header .platform-workspace-tabs button > i {
+  position: static;
+  font-size: 14px;
+}
+.platform-ide-unified-header .platform-workspace-tabs button span {
+  color: inherit;
+  font-size: 12px;
+}
+.platform-ide-unified-header .platform-workspace-tabs button small { display: none; }
+.platform-ide-unified-header .platform-workspace-tabs button::after {
+  right: 8px;
+  bottom: 0;
+  left: 8px;
+  height: 3px;
+  background: transparent;
+}
+.platform-ide-unified-header .platform-workspace-tabs button:hover { background: rgba(255,255,255,.08); }
+.platform-ide-unified-header .platform-workspace-tabs button.is-active {
+  border-color: rgba(255,255,255,.12);
+  background: rgba(255,255,255,.14);
+  color: #fff;
+}
+.platform-ide-unified-header .platform-workspace-tabs button.is-active span { color: #fff; }
+.platform-ide-unified-header .platform-workspace-tabs button.is-active::after { background: #75a7ff; }
+
+.platform-center-header > .platform-ide-header-actions {
+  display: flex;
+  min-width: 0;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.platform-ide-connection {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: auto auto;
+  gap: 2px 12px;
+  align-items: center;
+  color: #dbe8ff;
+}
+.platform-ide-connection strong {
+  grid-column: 1 / 3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.platform-ide-connection strong > i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fdb022;
+  box-shadow: 0 0 0 3px rgba(253,176,34,.16);
+}
+.is-theia-ready .platform-ide-connection strong > i { background: #6ce9a6; }
+.is-theia-error .platform-ide-connection strong > i { background: #ff7b72; }
+.platform-ide-connection small {
+  overflow: hidden;
+  max-width: 150px;
+  color: #bcd1f7;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.platform-ide-header-actions .platform-header-retry {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 10px;
+  gap: 5px;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 7px;
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-size: 10px;
+  cursor: pointer;
+}
+.platform-ide-header-actions .platform-ide-save-update {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 14px;
+  gap: 6px;
+  border: 1px solid rgba(255,255,255,.72);
+  border-radius: 7px;
+  background: #fff;
+  color: #155eef;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(4,31,82,.18);
+}
+.platform-ide-header-actions .platform-ide-save-update:hover { background: #edf4ff; }
+.platform-ide-header-actions .platform-ide-save-update.is-update {
+  border-color: #98f0c8;
+  background: #dcfae9;
+  color: #087a52;
+}
+.platform-ide-header-actions .platform-ide-save-update:disabled { cursor: wait; opacity: .68; }
+.platform-ide-header-actions .platform-header-retry:hover { background: rgba(255,255,255,.18); }
+.platform-ide-header-actions .platform-fullpage-back { height: 32px; }
+.platform-ide-header-actions em { flex: none; }
+
+.platform-theia-page {
+  grid-template-rows: minmax(0, 1fr);
+  height: auto;
+}
+.platform-theia-frame-wrap { border-top: 1px solid rgba(255,255,255,.08); }
+.platform-theia-dialog > .platform-deploy-page { height: auto; }
+
+/* The IDE remains mounted behind this compact release window, preserving tabs and cursor state. */
+.platform-theia-dialog > .platform-deploy-page {
+  position: absolute;
+  inset: 64px 0 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  place-items: center;
+  padding: 22px;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: rgba(8, 20, 39, .62);
+  backdrop-filter: blur(5px);
+}
+.platform-theia-dialog > .platform-deploy-page[hidden] { display: none; }
+.platform-deploy-backdrop { position: absolute; inset: 0; }
+.platform-deploy-window {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-column: 1;
+  grid-row: 1;
+  width: min(1180px, calc(100% - 44px));
+  max-width: 1180px;
+  height: min(740px, calc(100vh - 104px));
+  max-height: calc(100% - 12px);
+  min-height: min(560px, calc(100% - 12px));
+  grid-template-rows: 68px minmax(0, 1fr);
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid rgba(255,255,255,.7);
+  border-radius: 18px;
+  background: #f5f8fc;
+  box-shadow: 0 24px 70px rgba(2, 13, 33, .38);
+}
+.platform-deploy-window-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: linear-gradient(120deg, #155eef, #174ab8);
+  color: #fff;
+}
+.platform-deploy-window-header > div { display: flex; align-items: center; gap: 12px; }
+.platform-deploy-window-header > div > span { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 10px; background: rgba(255,255,255,.14); font-size: 17px; }
+.platform-deploy-window-header section { display: block; }
+.platform-deploy-window-header h2 { margin: 0 0 3px; font-size: 18px; }
+.platform-deploy-window-header p { margin: 0; color: #cfe0ff; font-size: 9px; }
+.platform-deploy-window-header button { width: 34px; height: 34px; border: 0; border-radius: 50%; background: transparent; color: #fff; font-size: 24px; cursor: pointer; }
+.platform-deploy-window-header button:hover { background: rgba(255,255,255,.14); }
+.platform-deploy-window-body { display: grid; min-height: 0; grid-template-columns: 275px minmax(0, 1fr); }
+.platform-deploy-window .platform-deploy-panel { min-height: 0; padding: 18px; overflow: auto; border: 0; border-right: 1px solid var(--pu-border); background: #f9fbff; }
+.platform-deploy-window .platform-deploy-workspace { min-height: 0; padding: 16px; gap: 10px; overflow: auto; }
+.platform-version-summary { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; margin: 14px 0; padding: 12px; border: 1px solid #d7e2f3; border-radius: 10px; background: #fff; }
+.platform-version-summary div { min-width: 0; }
+.platform-version-summary span { display: block; margin-bottom: 5px; color: #7b8ba5; font-size: 8px; }
+.platform-version-summary strong { color: #193866; font-size: 14px; }
+.platform-version-summary > i { color: #77a1e8; font-style: normal; }
+.platform-deploy-window .platform-deploy-hero { padding: 14px 16px; }
+.platform-deploy-window .platform-deploy-hero h3 { margin: 5px 0 3px; font-size: 16px; }
+.platform-deploy-window .platform-deploy-hero p { font-size: 9px; }
+.platform-deploy-window .platform-runtime-cards article { padding: 10px; }
+.platform-deploy-window .platform-runtime-cards article > i { width: 30px; height: 30px; font-size: 14px; }
+.platform-deploy-window .platform-deploy-flow { padding: 12px 14px; }
+.platform-deploy-window .platform-deploy-flow h4 { margin-bottom: 9px; }
+.platform-deploy-window .platform-deploy-flow > div > span { min-width: 104px; }
+.platform-deploy-window .platform-deploy-log-card { padding: 12px; }
+
+/* Classic update-center presentation for the plugin hot-deploy simulation. */
+.platform-classic-deploy-window {
+  width: min(1120px, calc(100% - 44px));
+  max-width: 1120px;
+  height: min(780px, calc(100% - 20px));
+  max-height: 780px;
+  min-height: min(640px, calc(100% - 20px));
+  grid-template-rows: 84px minmax(0, 1fr);
+  border-radius: 20px;
+  background: var(--pu-bg);
+}
+.platform-classic-deploy-window > .platform-center-header { height: 84px; }
+.platform-classic-deploy-main {
+  height: auto;
+  min-height: 0;
+  grid-template-columns: 310px minmax(0, 1fr);
+  gap: 18px;
+  padding: 20px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.platform-plugin-version-card label {
+  display: block;
+  margin-top: 16px;
+  color: #475467;
+  font-size: 11px;
+  font-weight: 600;
+}
+.platform-plugin-version-card .platform-plugin-config[hidden] { display: none !important; }
+.platform-plugin-version-card label input {
+  width: 100%;
+  height: 38px;
+  margin-top: 7px;
+  padding: 0 11px;
+  box-sizing: border-box;
+  border: 1px solid var(--pu-border);
+  border-radius: 8px;
+  outline: 0;
+  background: #fff;
+  color: #24324a;
+}
+.platform-plugin-version-card label input:focus { border-color: var(--pu-blue); box-shadow: 0 0 0 3px rgba(21,94,239,.09); }
+.platform-plugin-version-card .platform-deploy-source { margin-top: 16px; }
+.platform-plugin-version-card .platform-safe-tip { margin-top: auto; }
+.platform-detected-updates {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0 2px;
+  padding: 12px;
+  border: 1px solid #a9d0ff;
+  border-radius: 10px;
+  background: #eff7ff;
+  color: #344054;
+}
+.platform-detected-updates[hidden] { display: none !important; }
+.platform-detected-updates > i { margin-top: 2px; color: var(--pu-blue); }
+.platform-detected-updates strong,
+.platform-detected-updates span { display: block; }
+.platform-detected-updates strong { color: #174ea6; font-size: 12px; }
+.platform-detected-updates span { margin-top: 3px; color: #667085; font-size: 10px; }
+.platform-detected-updates ul { margin: 8px 0 0; padding-left: 16px; color: #344054; font: 9px/1.55 Consolas, 'Courier New', monospace; overflow-wrap: anywhere; }
+.platform-detected-updates li + li { margin-top: 5px; }
+.platform-detected-updates.is-deployed { border-color: #9bd8bd; background: #ecfdf3; }
+.platform-detected-updates.is-deployed > i,
+.platform-detected-updates.is-deployed strong { color: #087a52; }
+.platform-plugin-status-card { padding: 24px; }
+.platform-plugin-status-card .platform-actions button { min-width: 116px; }
+.platform-plugin-runtime-summary {
+  display: flex;
+  gap: 8px 18px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--pu-border);
+  color: var(--pu-muted);
+  font-size: 10px;
+}
+.platform-plugin-runtime-summary strong { color: var(--pu-text); }
+.platform-classic-deploy-main .platform-log-card { overflow: hidden; }
+
+@media (max-width: 820px) {
+  .platform-classic-deploy-window { height: calc(100% - 12px); min-height: 0; }
+  .platform-classic-deploy-main { display: grid; grid-template-columns: 250px minmax(520px, 1fr); overflow: auto; }
+}
+
+@media (max-width: 900px) {
+  .platform-deploy-window-body { grid-template-columns: 240px minmax(0, 1fr); }
+  .platform-runtime-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 1100px) {
+  .platform-ide-unified-header {
+    grid-template-columns: minmax(190px, 240px) auto 1fr;
+    gap: 8px;
+  }
+  .platform-ide-connection small { display: none; }
+  .platform-ide-header-actions em { display: none; }
+}
+
+@media (max-width: 760px) {
+  .platform-ide-unified-header { grid-template-columns: auto 1fr auto; padding: 0 10px; }
+  .platform-ide-unified-header .platform-center-title > span,
+  .platform-ide-unified-header .platform-center-title p,
+  .platform-ide-connection,
+  .platform-header-retry span,
+  .platform-ide-save-update span { display: none; }
+  .platform-ide-unified-header .platform-workspace-tabs button { min-width: 92px; padding: 0 9px; }
+}

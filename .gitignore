@@ -25,6 +25,13 @@ activemq/
 Redis/
 minio/
 tools/
+!tools/
+tools/*
+!tools/start_embedded_theia.ps1
+!tools/stop_all_platform_services.ps1
+!tools/start_ui_and_ide.ps1
+!tools/run_embedded_theia_watchdog.ps1
+!tools/reset_ide_presentation_code.ps1
 
 # Extracted JAR artifacts at repo root
 BOOT-INF/
@@ -53,3 +60,15 @@ Thumbs.db
 
 # Optional: keep dist_mes.zip out if dist_mes/ is tracked
 # dist_mes.zip
+
+# Local workspace copies, runtime backups, and duplicate exports
+/ide-workspace/
+/ide-demo-workspace/
+/runtime-logs/
+/.tmp/
+/.codex-doc-review/
+* (2)*
+/production-scheduling.zip
+/opt/dataease2.0/cache/
+/opt/dataease2.0/config/application.yml
+node_modules/

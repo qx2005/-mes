@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "name": "@bsq/mes-sandbox-extension",
+  "version": "1.0.0",
+  "license": "MIT",
+  "keywords": [
+    "theia-extension"
+  ],
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/mes-sandbox-frontend-module",
+      "backend": "lib/node/mes-sandbox-backend-module"
+    }
+  ],
+  "files": [
+    "lib",
+    "src"
+  ],
+  "dependencies": {
+    "@theia/core": "1.75.0",
+    "@theia/editor": "1.75.0",
+    "@theia/filesystem": "1.75.0",
+    "@theia/monaco-editor-core": "1.108.201"
+  },
+  "devDependencies": {
+    "typescript": "5.9.2"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "node -e \"require('fs').rmSync('lib',{recursive:true,force:true})\""
+  }
+}

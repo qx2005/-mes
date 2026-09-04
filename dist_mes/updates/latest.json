@@ -1,0 +1,14 @@
+{
+  "version": "3.9.2",
+  "packageName": "flexible-scheduler.zip",
+  "packageUrl": "/updates/flexible-scheduler.zip",
+  "targetFile": "production-scheduling/flexible-line/flexible-scheduler.js",
+  "packageSizeBytes": 4882,
+  "sha256": "1E61F599932614AFB7FA3282DC0A1934F60E473552107211AF9C46B70916561D",
+  "releaseDate": "2026-09-02",
+  "releaseNotes": [
+    "更新柔性排产算法模块",
+    "优化产线负载与交付评分逻辑",
+    "完善排产参数校验与计划生成流程"
+  ]
+}

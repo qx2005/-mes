@@ -1,0 +1,58 @@
+{
+  "private": true,
+  "name": "bsq-mes-embedded-theia",
+  "version": "1.0.0",
+  "license": "EPL-2.0 OR GPL-2.0-only WITH Classpath-exception-2.0",
+  "theia": {
+    "frontend": {
+      "config": {
+        "applicationName": "MES 在线 IDE",
+        "defaultTheme": {
+          "light": "theia-light",
+          "dark": "theia-dark"
+        },
+        "preferences": {
+          "files.enableTrash": false,
+          "security.workspace.trust.enabled": false,
+          "window.title": "${dirty}${activeEditorShort}${separator}MES 在线 IDE"
+        },
+        "reloadOnReconnect": true
+      }
+    },
+    "backend": {
+      "config": {
+        "frontendConnectionTimeout": 3000,
+        "configureProxyFromPreferences": false
+      }
+    }
+  },
+  "workspaces": [
+    "extensions/*"
+  ],
+  "dependencies": {
+    "@bsq/mes-sandbox-extension": "1.0.0",
+    "@theia/core": "1.75.0",
+    "@theia/editor": "1.75.0",
+    "@theia/file-search": "1.75.0",
+    "@theia/filesystem": "1.75.0",
+    "@theia/keymaps": "1.75.0",
+    "@theia/markers": "1.75.0",
+    "@theia/messages": "1.75.0",
+    "@theia/monaco": "1.75.0",
+    "@theia/monaco-editor-core": "1.108.201",
+    "@theia/navigator": "1.75.0",
+    "@theia/output": "1.75.0",
+    "@theia/preferences": "1.75.0",
+    "@theia/search-in-workspace": "1.75.0",
+    "@theia/workspace": "1.75.0"
+  },
+  "devDependencies": {
+    "@theia/cli": "1.75.0"
+  },
+  "scripts": {
+    "clean": "theia clean",
+    "build:extension": "npm run build --workspace @bsq/mes-sandbox-extension",
+    "build": "npm run build:extension && theia build --mode production",
+    "start": "theia start ../ide-workspace/bsq_usr --hostname 127.0.0.1 --port 3188 --log-level warn"
+  }
+}

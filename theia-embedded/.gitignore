@@ -1,0 +1,8 @@
+node_modules/
+extensions/*/node_modules/
+extensions/*/lib/
+lib/
+src-gen/
+esbuild.mjs
+gen-esbuild.*.mjs
+*.log

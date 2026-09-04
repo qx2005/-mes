@@ -16,12 +16,6 @@
         <span><i class="el-icon-lightning" /> 生产指令实时下发</span>
       </div>
       <div class="image-group">
-        <div class="product-image product-image--device">
-          <el-image class="img-preview" :src="deviceImageSrc" alt="设备图片" fit="contain">
-            <div slot="error" class="image-placeholder"><i class="el-icon-picture-outline" /></div>
-          </el-image>
-          <p class="image-desc">柔性产线</p>
-        </div>
         <div v-for="(item, index) in productList" :key="item.id || index"
           class="product-image product-image--selectable"
           :class="{ 'is-selected': selectedProductIndex === index }"
@@ -41,7 +35,7 @@
           <el-form :model="schedulingForm" size="small" label-position="top" class="scheduling-config__form">
             <el-form-item label="期望交付时间">
               <el-date-picker v-model="schedulingForm.deadline" type="date" value-format="yyyy-MM-dd"
-                placeholder="选择交期" :picker-options="deadlinePickerOptions" @change="resetSchedule" />
+                placeholder="选择交期" :picker-options="deadlinePickerOptions" disabled @change="resetSchedule" />
             </el-form-item>
             <el-form-item label="订单优先级">
               <el-radio-group v-model="schedulingForm.priority" @change="resetSchedule">
@@ -106,13 +100,11 @@
         </div>
         <div class="action-group__form">
           <el-form ref="orderForm" :model="orderForm" size="small" inline>
-            <el-form-item label="计划数量" prop="quantity" :rules="quantityRules">
-              <el-input v-model.number="orderForm.quantity" style="width: 120px"
-                placeholder="请输入计划数量" clearable type="number" :min="1" @input="resetSchedule" />
-            </el-form-item>
             <el-form-item>
-              <el-button type="primary" :icon="scheduleGenerated ? 'el-icon-s-promotion' : 'el-icon-cpu'" size="medium"
-                :loading="submitting || scheduleCalculating" :disabled="scheduleCalculating" @click="submitOrder">{{ scheduleGenerated ? '确认方案并下发' : (scheduleCalculating ? '方案计算中 ' + scheduleProgress + '%' : '生成排产方案') }}</el-button>
+              <el-button class="schedule-generate-button" icon="el-icon-cpu" size="medium"
+                :loading="scheduleCalculating" :disabled="scheduleCalculating" @click="generateScheduleFromForm">{{ scheduleCalculating ? '方案计算中 ' + scheduleProgress + '%' : (scheduleGenerated ? '重新生成方案' : '生成排产方案') }}</el-button>
+              <el-button class="schedule-confirm-button" type="primary" icon="el-icon-s-promotion" size="medium"
+                :loading="submitting" :disabled="!scheduleGenerated || scheduleCalculating" @click="submitOrder">确认方案并下发</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -123,17 +115,24 @@
 
 <script>
 import { listWorkorder, issueProtaskByWorkorderId } from '../api/productionOrder'
-import deviceImg from '../assets/img/device.png'
 import b1Img from '../assets/img/b1.png'
 import b2Img from '../assets/img/b2.jpg'
 import b3Img from '../assets/img/b3.jpg'
 import b4Img from '../assets/img/b4.jpg'
+import b5Img from '../assets/img/b5.png'
+import b6Img from '../assets/img/b6.png'
+import b7Img from '../assets/img/b7-v2.png'
+import b8Img from '../assets/img/b8-v2.png'
 
 const DEFAULT_PRODUCTS = [
   { id: 1, src: b1Img, name: '品类一' },
   { id: 2, src: b2Img, name: '品类二' },
   { id: 3, src: b3Img, name: '品类三' },
-  { id: 4, src: b4Img, name: '品类四' }
+  { id: 4, src: b4Img, name: '品类四' },
+  { id: 5, src: b5Img, name: '品类五' },
+  { id: 6, src: b6Img, name: '品类六' },
+  { id: 7, src: b7Img, name: '品类七' },
+  { id: 8, src: b8Img, name: '品类八' }
 ]
 
 export default {
@@ -144,7 +143,6 @@ export default {
       type: String,
       default: '按需选择生产品类与计划数量，系统将匹配当前可用工单并快速下发至产线'
     },
-    deviceImage: { type: [String, Object], default: null },
     products: { type: Array, default: () => DEFAULT_PRODUCTS },
     queryParams: { type: Object, default: () => ({}) },
     confirmText: { type: String, default: '确认当前柔性排产方案并下发至产线？' },
@@ -162,7 +160,7 @@ export default {
       schedulePreview: {},
       schedulingForm: {
         deadline: '',
-        priority: 'normal',
+        priority: 'urgent',
         strategy: 'balanced',
         lineMode: 'auto'
       },
@@ -171,8 +169,8 @@ export default {
           return time.getTime() < Date.now() - 86400000
         }
       },
-      selectedProductIndex: 0,
-      orderForm: { quantity: 1 },
+      selectedProductIndex: 1,
+      orderForm: { quantity: 10 },
       quantityRules: [
         { required: true, message: '请输入计划数量', trigger: 'blur' },
         { type: 'number', min: 1, message: '计划数量不能小于1', trigger: 'blur' }
@@ -182,13 +180,10 @@ export default {
   computed: {
     productList() {
       return this.products && this.products.length ? this.products : DEFAULT_PRODUCTS
-    },
-    deviceImageSrc() {
-      return this.deviceImage || deviceImg
     }
   },
   created() {
-    this.schedulingForm.deadline = this.formatDate(new Date(Date.now() + 3 * 86400000), false)
+    this.schedulingForm.deadline = this.formatDate(new Date(), false)
     this.getList()
   },
   beforeDestroy() {
@@ -262,6 +257,11 @@ export default {
       }, 40)
       return true
     },
+    generateScheduleFromForm() {
+      this.$refs.orderForm.validate(valid => {
+        if (valid && !this.scheduleCalculating) this.generateSchedule()
+      })
+    },
     getList() {
       this.loading = true
       listWorkorder(this.queryParams)
@@ -279,21 +279,26 @@ export default {
         if (!valid) return
         if (this.scheduleCalculating) return
         if (!this.scheduleGenerated) {
-          this.generateSchedule()
+          this.$modal.msgWarning('请先生成排产方案')
           return
         }
         if (!this.workorderList.length) {
           this.$modal.msgWarning('当前暂无可匹配工单，无法生成排产方案')
           return
         }
-        const workorderId = this.workorderList[this.workorderList.length - 1].workorderId
+        const selectedWorkorder = this.workorderList[this.workorderList.length - 1]
+        const workorderId = selectedWorkorder.workorderId
         const selected = this.productList[this.selectedProductIndex]
         const quantity = this.orderForm.quantity
         const payload = {
           workorderId,
           product: selected,
           productIndex: this.selectedProductIndex,
-          quantity
+          quantity,
+          workorder: selectedWorkorder,
+          schedule: Object.assign({}, this.schedulePreview),
+          deadline: this.schedulingForm.deadline,
+          priority: this.schedulingForm.priority
         }
         this.$modal
           .confirm(this.confirmText)
@@ -309,6 +314,7 @@ export default {
               '柔性排产方案已下发：' + selected.name + '，计划数量 ' + quantity
             )
             this.$emit('order-success', payload)
+            window.dispatchEvent(new CustomEvent('flex-schedule-order-success', { detail: payload }))
             this.resetSchedule()
           })
           .catch(err => {
@@ -356,7 +362,7 @@ export default {
 
   margin-bottom: 0;
 
-  padding: 22px 28px 18px;
+  padding: 12px 18px 10px;
 
   border-bottom: 1px solid #ebeef5;
 
@@ -401,14 +407,14 @@ export default {
 .scheduling-workbench {
   display: grid;
   grid-template-columns: minmax(420px, 1.05fr) minmax(380px, .95fr);
-  gap: 16px;
-  margin: 12px 28px 0;
+  gap: 10px;
+  margin: 8px 18px 0;
 }
 
 .scheduling-config,
 .schedule-preview {
-  min-height: 188px;
-  padding: 16px 18px;
+  min-height: 176px;
+  padding: 12px 14px;
   background: #fafcff;
   border: 1px solid #e1eaf3;
   border-radius: 10px;
@@ -583,15 +589,15 @@ export default {
 
 .product-panel-title {
 
-  margin: 0 0 6px;
+  margin: 0 0 3px;
 
-  font-size: 18px;
+  font-size: 17px;
 
   font-weight: 600;
 
   color: #303133;
 
-  line-height: 1.4;
+  line-height: 1.2;
 
 }
 
@@ -601,11 +607,11 @@ export default {
 
   margin: 0;
 
-  font-size: 13px;
+  font-size: 12px;
 
   color: #909399;
 
-  line-height: 1.5;
+  line-height: 1.3;
 
 }
 
@@ -615,13 +621,13 @@ export default {
 
   display: grid;
 
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
-  gap: 16px;
+  gap: 10px;
 
   width: 100%;
 
-  padding: 20px 28px 8px;
+  padding: 10px 18px 4px;
 
   box-sizing: border-box;
 
@@ -637,9 +643,11 @@ export default {
 
   align-items: center;
 
-  gap: 10px;
+  gap: 6px;
 
-  padding: 14px 12px 12px;
+  height: 156px;
+
+  padding: 8px 8px 7px;
 
   background: #fafbfc;
 
@@ -657,21 +665,13 @@ export default {
 
 
 
-.product-image--device {
-
-  background: #f5f7fa;
-
-}
-
-
-
 .img-preview,
 
 .img-preview1 {
 
   width: 100%;
 
-  height: 168px;
+  height: 100px;
 
   border: 1px solid #ebeef5;
 
@@ -727,7 +727,13 @@ export default {
 
   color: #303133;
 
+  height: 22px;
+
   margin: 0;
+
+  line-height: 22px;
+
+  flex: 0 0 22px;
 
   text-align: center;
 
@@ -751,9 +757,9 @@ export default {
 
   width: 100%;
 
-  margin-top: 22px;
+  margin-top: 10px;
 
-  padding: 16px 20px;
+  padding: 10px 18px;
 
   border-top: 1px solid #ebeef5;
 

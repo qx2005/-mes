@@ -1,29 +1,24 @@
-# BSQ 工业互联网平台运行包（GitHub 精简版）
+# IBM Inspired Design System
 
-本仓库为 `bsq_usr` 运行包的 **可版本管理部分**。因 GitHub 单文件 100MB 限制，以下大体积组件 **未纳入 Git**，需本地保留或另行下载：
+[DESIGN.md](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/ibm/DESIGN.md) extracted from the public [IBM](https://ibm.com/) website. This is not the official design system. Colors, fonts, and spacing may not be 100% accurate. But it's a good starting point for building something similar.
 
-- `bsq-admin.jar`、`thingsboard.jar`
-- `jdk/`、`jdk-21/`
-- `mysql/`、`mysql-8.0.30/`、`pgsql/`、`activemq/`、`Redis/`、`minio/`、`tools/`
+## Files
 
-## 仓库内包含
+| File | Description |
+|------|-------------|
+| `DESIGN.md` | Complete design system documentation (9 sections) |
+| `preview.html` | Interactive design token catalog (light) |
+| `preview-dark.html` | Interactive design token catalog (dark) |
 
-- 启动 / 停止脚本（`*.bat`）
-- MES 前端 `dist_mes/`（工业主题、柔性排产页品类图）
-- Nginx 配置 `nginx-1.22.1/`
-- 柔性排产移植包 `production-order-portable/`（复用原生产下单执行链路）
-- UI 设计参考 `DESIGN.md`
-- 项目说明 `项目说明文档.md`
 
-DataEase 已从本运行包移除。
+Use [DESIGN.md](https://github.com/VoltAgent/awesome-design-md/blob/main/design-md/ibm/DESIGN.md) to use as a reference for AI agents (Claude, Cursor, Stitch) to generate UI that looks like the IBM design language.
 
-## 本地完整部署
+## Preview
 
-1. 将 Git 克隆目录与原有完整运行包合并（或保留 JAR 与中间件目录）
-2. 双击 `一键启动工业互联网平台服务.bat`，等待 3～5 分钟
-3. 浏览器访问 `http://127.0.0.1:82`，账号 `user01` / `123456`
-4. 停止服务使用 `99停止工业互联网平台服务.bat`
+A sample landing page built with DESIGN.md. It shows the actual colors, typography, buttons, cards, spacing, and elevation, all in one page.
 
-## 远程仓库
+### Dark Mode
+![IBM Design System — Dark Mode](https://pub-2e4ecbcbc9b24e7b93f1a6ab5b2bc71f.r2.dev/designs/ibm/preview-dark-screenshot.png)
 
-https://github.com/qx2005/-mes
+### Light Mode
+![IBM Design System — Light Mode](https://pub-2e4ecbcbc9b24e7b93f1a6ab5b2bc71f.r2.dev/designs/ibm/preview-screenshot.png)

@@ -1,0 +1,4 @@
+{
+  "production-scheduling/flexible-line/src/application/production-management-service.js": [23, 24, 28, 29, 30, 32, 33, 34, 38, 39, 44],
+  "production-scheduling/flexible-line/src/scheduling/finite-capacity-scheduler.js": [30, 37, 102, 103]
+}
