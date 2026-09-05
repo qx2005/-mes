@@ -275,8 +275,10 @@ export default {
         })
     },
     submitOrder() {
+      if (this.submitting) return
       this.$refs.orderForm.validate(valid => {
         if (!valid) return
+        if (this.submitting) return
         if (this.scheduleCalculating) return
         if (!this.scheduleGenerated) {
           this.$modal.msgWarning('请先生成排产方案')
@@ -300,10 +302,10 @@ export default {
           deadline: this.schedulingForm.deadline,
           priority: this.schedulingForm.priority
         }
+        this.submitting = true
         this.$modal
           .confirm(this.confirmText)
           .then(() => {
-            this.submitting = true
             if (typeof this.customSubmit === 'function') {
               return this.customSubmit(payload)
             }
@@ -311,7 +313,7 @@ export default {
           })
           .then(() => {
             this.$modal.msgSuccess(
-              '柔性排产方案已下发：' + selected.name + '，计划数量 ' + quantity
+              '柔性排产方案已下发：' + selected.name
             )
             this.$emit('order-success', payload)
             window.dispatchEvent(new CustomEvent('flex-schedule-order-success', { detail: payload }))

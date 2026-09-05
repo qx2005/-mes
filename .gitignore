@@ -30,6 +30,7 @@ tools/*
 !tools/start_embedded_theia.ps1
 !tools/stop_all_platform_services.ps1
 !tools/start_ui_and_ide.ps1
+!tools/start_all_platform_services.ps1
 !tools/run_embedded_theia_watchdog.ps1
 !tools/reset_ide_presentation_code.ps1
 
@@ -63,6 +64,8 @@ Thumbs.db
 
 # Local workspace copies, runtime backups, and duplicate exports
 /ide-workspace/
+/ide-baseline/
+!tools/ide-baseline.cjs
 /ide-demo-workspace/
 /runtime-logs/
 /.tmp/

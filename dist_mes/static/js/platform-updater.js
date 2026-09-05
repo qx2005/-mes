@@ -7,7 +7,7 @@
   var PLUGIN_TARGET_VERSION = '3.9.2'
   var CONFIG_URL = '/static/config/platform-updater.json?v=20260904-ai-code-review'
   var DEFAULT_CONFIG = {
-    productName: '智能罐装柔性排产平台',
+    productName: '智能灌装柔性排产平台',
     currentVersion: '3.8.2',
     latestVersion: PLUGIN_TARGET_VERSION,
     packageName: 'flexible-scheduler.zip',
@@ -833,6 +833,8 @@
     var healthTimer = null
     var healthFailures = 0
     var connectionLost = false
+    var closed = false
+    var connectionGeneration = 0
     var ideOrigin = new URL(config.ideUrl, window.location.href).origin
     var savedFile = ''
     var savedPath = ''
@@ -853,6 +855,7 @@
     }
 
     function showConnectionState(state) {
+      if (closed) return
       layer.classList.toggle('is-theia-ready', state === 'ready')
       layer.classList.toggle('is-theia-error', state === 'error')
       loading.hidden = state !== 'loading'
@@ -864,6 +867,8 @@
     }
 
     function connectTheia() {
+      if (closed) return
+      var generation = ++connectionGeneration
       if (connectTimer) window.clearTimeout(connectTimer)
       if (healthTimer) window.clearTimeout(healthTimer)
       showConnectionState('loading')
@@ -872,6 +877,7 @@
       var attempts = 0
 
       function waitUntilHealthy() {
+        if (closed || generation !== connectionGeneration) return
         attempts += 1
         fetch(config.ideUrl + '/mes-sandbox/health?_=' + Date.now(), {
           cache: 'no-store',
@@ -880,6 +886,7 @@
           if (!response.ok) throw new Error('IDE health check failed')
           return response.json()
         }).then(function (health) {
+          if (closed || generation !== connectionGeneration) return
           if (!health || health.ok !== true || health.service !== 'mes-embedded-theia') {
             throw new Error('IDE health response is invalid')
           }
@@ -887,6 +894,7 @@
           iframe.src = config.ideUrl + '/?_mes=' + Date.now()
           connectTimer = window.setTimeout(function () { showConnectionState('error') }, 30000)
         }).catch(function () {
+          if (closed || generation !== connectionGeneration) return
           if (attempts < 30) {
             connectTimer = window.setTimeout(waitUntilHealthy, 1000)
           } else {
@@ -899,9 +907,12 @@
     }
 
     function startHealthMonitor() {
+      if (closed) return
+      var generation = connectionGeneration
       if (healthTimer) window.clearTimeout(healthTimer)
 
       function probe() {
+        if (closed || generation !== connectionGeneration) return
         fetch(config.ideUrl + '/mes-sandbox/health?_=' + Date.now(), {
           cache: 'no-store',
           credentials: 'same-origin'
@@ -909,6 +920,7 @@
           if (!response.ok) throw new Error('IDE health check failed')
           return response.json()
         }).then(function (health) {
+          if (closed || generation !== connectionGeneration) return
           if (!health || health.ok !== true || health.service !== 'mes-embedded-theia') {
             throw new Error('IDE health response is invalid')
           }
@@ -920,6 +932,7 @@
           }
           healthTimer = window.setTimeout(probe, 3000)
         }).catch(function () {
+          if (closed || generation !== connectionGeneration) return
           healthFailures += 1
           if (healthFailures >= 2) {
             connectionLost = true
@@ -933,12 +946,8 @@
       healthTimer = window.setTimeout(probe, 3000)
     }
 
-    iframe.addEventListener('load', function () {
-      if (connectTimer) window.clearTimeout(connectTimer)
-      showConnectionState('ready')
-      healthFailures = 0
-      startHealthMonitor()
-    })
+    // The iframe also fires load for about:blank and error pages. Only the
+    // existing mes-theia ready message confirms that the editor has started.
 
     function markCheck(name, text, passed) {
       var row = layer.querySelector('[data-check="' + name + '"]')
@@ -1292,6 +1301,8 @@
     })
     layer.querySelector('[data-clear-log]').addEventListener('click', function () { layer.querySelector('[data-update-log]').innerHTML = '' })
     layer.querySelector('[data-close-updater]').addEventListener('click', function () {
+      closed = true
+      connectionGeneration += 1
       if (deployTimer) window.clearInterval(deployTimer)
       if (connectTimer) window.clearTimeout(connectTimer)
       if (healthTimer) window.clearTimeout(healthTimer)

@@ -1,6 +1,12 @@
 $ErrorActionPreference = 'Stop'
 
 $projectRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
+# The frozen current IDE baseline also defines the starting point after restart.
+if (Test-Path -LiteralPath (Join-Path $projectRoot 'ide-baseline\manifest.json')) {
+    & node.exe (Join-Path $projectRoot 'tools\ide-baseline.cjs') restore
+    if ($LASTEXITCODE -ne 0) { throw 'Failed to restore the fixed IDE baseline.' }
+    return
+}
 $sourceRoot = [System.IO.Path]::GetFullPath((Join-Path $projectRoot 'production-scheduling'))
 $workspaceRoot = [System.IO.Path]::GetFullPath((Join-Path $projectRoot 'ide-workspace\bsq_usr\production-scheduling'))
 $expectedWorkspacePrefix = [System.IO.Path]::GetFullPath((Join-Path $projectRoot 'ide-workspace\bsq_usr')).TrimEnd('\') + '\'

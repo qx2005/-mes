@@ -2,7 +2,7 @@
 
 const { SchedulingError, ValidationError } = require('../domain/errors') // 从其他模块导入当前文件需要的函数或常量
 const { findAvailableSlot } = require('./working-calendar') // 从其他模块导入当前文件需要的函数或常量
-
+const { DEFAULT_CALENDAR_ID } = require('../config/scheduling-policies')
 function generateFiniteCapacitySchedule({ workOrder, route, engineConfig, resourcePool, clock, idGenerator }) { // 定义 generateFiniteCapacitySchedule 函数，执行对应的业务处理
   validateSchedulingInput(workOrder, route, engineConfig, resourcePool) // 调用当前业务函数执行对应处理
   const resources = resourcePool.resources.filter(resource => // 计算并保存 resources，供后续业务逻辑使用
@@ -23,7 +23,7 @@ function generateFiniteCapacitySchedule({ workOrder, route, engineConfig, resour
         operation, // 传递或返回 operation 业务数据
         workOrder, // 传递或返回 workOrder 业务数据
         earliest: dependencyEnd, // 设置 earliest 字段，形成完整的业务数据结构
-        calendar: calendars.get(resource.calendarId), // 设置 calendar 字段，形成完整的业务数据结构
+        calendar: calendars.get(resource.calendarId || DEFAULT_CALENDAR_ID), // 与引擎保持相同的默认日历
         engineConfig, // 传递或返回 engineConfig 业务数据
         changeoverMatrix: resourcePool.changeoverMatrix // 设置 changeoverMatrix 字段，形成完整的业务数据结构
       })) // 结束当前函数调用或数据转换结构
@@ -61,8 +61,8 @@ function generateFiniteCapacitySchedule({ workOrder, route, engineConfig, resour
     }) // 结束当前函数调用或数据转换结构
   } // 结束当前对象或代码块
 
-  const plannedStart = scheduledOperations[0].startTime // 计算并保存 plannedStart，供后续业务逻辑使用
-  const plannedEnd = scheduledOperations.at(-1).endTime // 计算并保存 plannedEnd，供后续业务逻辑使用
+  const plannedStart = scheduledOperations.reduce((earliest, item) => item.startTime < earliest ? item.startTime : earliest, scheduledOperations[0].startTime) // 包含所有并行工序的最早开始时间
+  const plannedEnd = scheduledOperations.reduce((latest, item) => item.endTime > latest ? item.endTime : latest, scheduledOperations[0].endTime) // 包含所有并行工序的最晚结束时间
   const overdueMinutes = Math.max(0, Math.ceil((new Date(plannedEnd) - new Date(workOrder.deadline)) / 60000)) // 计算并保存 overdueMinutes，供后续业务逻辑使用
   if (overdueMinutes > 0 && !engineConfig.allowOverdue) { // 判断当前业务条件是否满足，并在必要时执行分支处理
     throw new SchedulingError('DEADLINE_UNACHIEVABLE', // 创建并抛出业务异常，终止不合法的处理流程

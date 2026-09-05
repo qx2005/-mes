@@ -16,6 +16,10 @@ function buildStartPayload(workorderId, workorder) {
     const quantity = Number(workorder.quantity || 0)
     const produced = Number(workorder.quantity_produced || 0)
     const planQty = quantity - produced
+    if (!Number.isFinite(planQty) || !Number.isFinite(quantity) || !Number.isFinite(produced) ||
+        quantity <= 0 || produced < 0 || planQty <= 0) {
+      throw new Error('Workorder has no valid remaining production quantity')
+    }
     wData.push({ name: 'plan_pty', value: String(planQty) })
   }
 
@@ -37,8 +41,8 @@ async function getClient(config) {
     return connecting
   }
 
-  connecting = new Promise((resolve, reject) => {
-    const c = mqtt.connect(config.hostUrl, {
+  if (!client) {
+    client = mqtt.connect(config.hostUrl, {
       username: config.username,
       password: config.password,
       clientId: config.clientId || `production-bridge-${Date.now()}`,
@@ -48,17 +52,28 @@ async function getClient(config) {
       reconnectPeriod: 5000
     })
 
-    c.on('connect', () => {
-      client = c
-      connecting = null
-      resolve(c)
-    })
-
-    c.on('error', err => {
-      connecting = null
-      reject(err)
-    })
-  })
+    // Keep the reconnecting client instead of opening another client with the same ID.
+    client.on('error', () => {})
+  }
+  const c = client
+  connecting = new Promise((resolve, reject) => {
+    const timer = setTimeout(() => finish(new Error('MQTT connection timed out')),
+      (config.timeout || 100) * 1000)
+    function finish(error) {
+      clearTimeout(timer)
+      c.removeListener('connect', onConnect)
+      c.removeListener('error', onError)
+      if (error) {
+        if (client === c) client = null
+        c.end(true)
+        reject(error)
+      } else resolve(c)
+    }
+    function onConnect() { finish() }
+    function onError(error) { finish(error) }
+    c.once('connect', onConnect)
+    c.once('error', onError)
+  }).finally(() => { connecting = null })
 
   return connecting
 }
@@ -74,9 +89,9 @@ async function publishProductionStart(config, workorderId, workorder) {
     throw new Error('MQTT is disabled in bridge config')
   }
 
-  const mqttClient = await getClient(config)
   const topic = config.publishTopic || 'SubTopic1'
   const payload = JSON.stringify(buildStartPayload(workorderId, workorder))
+  const mqttClient = await getClient(config)
   const qos = Number(config.qos ?? 0)
   const retain = config.retain !== false
 

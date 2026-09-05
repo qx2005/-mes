@@ -4,6 +4,7 @@ const { SchedulingError, ValidationError } = require('../domain/errors') // 从�
 
 function alignToWorkingTime(value, calendar) { // 定义 alignToWorkingTime 函数，执行对应的业务处理
   let cursor = new Date(value) // 初始化可变变量 cursor，用于记录计算过程状态
+  if (!Number.isFinite(cursor.getTime())) throw new ValidationError('排产开始时间无效')
   assertCalendar(calendar) // 调用当前业务函数执行对应处理
   for (let dayOffset = 0; dayOffset < 370; dayOffset += 1) { // 遍历当前数据集合，逐项执行业务处理
     const dateKey = cursor.toISOString().slice(0, 10) // 计算并保存 dateKey，供后续业务逻辑使用
@@ -12,7 +13,7 @@ function alignToWorkingTime(value, calendar) { // 定义 alignToWorkingTime 函�
       const shifts = calendar.shifts.filter(shift => shift.daysOfWeek.includes(day)) // 计算并保存 shifts，供后续业务逻辑使用
         .map(shift => toInterval(cursor, shift)).sort((a, b) => a.start - b.start) // 将集合中的数据转换为目标业务结构
       for (const shift of shifts) { // 遍历当前数据集合，逐项执行业务处理
-        if (cursor <= shift.end) return cursor < shift.start ? shift.start : cursor // 判断当前业务条件是否满足，并在必要时执行分支处理
+        if (cursor < shift.end) return cursor < shift.start ? shift.start : cursor // 班次结束时刻属于下一班次
       } // 结束当前对象或代码块
     } // 结束当前对象或代码块
     cursor = startOfNextUtcDay(cursor) // 更新当前对象属性，使后续计算使用最新业务状态
@@ -30,10 +31,10 @@ function addWorkingMinutes(startValue, minutes, calendar) { // 定义 addWorking
       cursor = alignToWorkingTime(new Date(cursor.getTime() + 60000), calendar) // 更新当前对象属性，使后续计算使用最新业务状态
       continue // 传递或返回 continue 业务数据
     } // 结束当前对象或代码块
-    const available = Math.floor((shift.end.getTime() - cursor.getTime()) / 60000) // 计算并保存 available，供后续业务逻辑使用
+    const available = (shift.end.getTime() - cursor.getTime()) / 60000 // 保留秒数，避免跨班次损失不足一分钟的产能
     if (remaining <= available) return new Date(cursor.getTime() + remaining * 60000) // 判断当前业务条件是否满足，并在必要时执行分支处理
     remaining -= available // 补充当前多行表达式所需的业务参数或计算条件
-    cursor = alignToWorkingTime(new Date(shift.end.getTime() + 60000), calendar) // 更新当前对象属性，使后续计算使用最新业务状态
+    cursor = alignToWorkingTime(shift.end, calendar) // 从班次边界衔接，不额外增加一分钟
   } // 结束当前对象或代码块
   return cursor // 返回当前函数计算或查询得到的结果
 } // 结束当前对象或代码块
@@ -58,7 +59,7 @@ function findContainingShift(value, calendar) { // 定义 findContainingShift �
   if (calendar.excludedDates?.includes(dateKey)) return null // 判断当前业务条件是否满足，并在必要时执行分支处理
   return calendar.shifts.filter(shift => shift.daysOfWeek.includes(value.getUTCDay())) // 返回当前函数计算或查询得到的结果
     .map(shift => toInterval(value, shift)) // 将集合中的数据转换为目标业务结构
-    .find(interval => value >= interval.start && value <= interval.end) || null // 查找第一个满足当前条件的数据项
+    .find(interval => value >= interval.start && value < interval.end) || null // 使用左闭右开的班次区间
 } // 结束当前对象或代码块
 
 function toInterval(date, shift) { // 定义 toInterval 函数，执行对应的业务处理
@@ -79,6 +80,15 @@ function assertCalendar(calendar) { // 定义 assertCalendar 函数，执行对�
   if (!calendar || !calendar.id || !Array.isArray(calendar.shifts) || !calendar.shifts.length) { // 判断当前业务条件是否满足，并在必要时执行分支处理
     throw new ValidationError('资源必须关联包含班次的工作日历') // 创建并抛出业务异常，终止不合法的处理流程
   } // 结束当前对象或代码块
+  const timePattern = /^(?:[01]\d|2[0-3]):[0-5]\d$/
+  for (const shift of calendar.shifts) {
+    if (!shift || !Array.isArray(shift.daysOfWeek) || !shift.daysOfWeek.length ||
+        shift.daysOfWeek.some(day => !Number.isInteger(day) || day < 0 || day > 6) ||
+        !timePattern.test(shift.start) || !(timePattern.test(shift.end) || shift.end === '24:00') ||
+        shift.start >= shift.end) {
+      throw new ValidationError('班次必须包含有效星期及递增的 HH:mm 时间；跨日班次请按 UTC 日期拆分')
+    }
+  }
 } // 结束当前对象或代码块
 
 module.exports = { alignToWorkingTime, addWorkingMinutes, findAvailableSlot } // 导出当前模块的公共接口，供上层代码调用

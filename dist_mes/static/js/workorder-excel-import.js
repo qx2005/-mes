@@ -144,11 +144,16 @@
     return 'KH' + String(sequence + 1).padStart(3, '0')
   }
 
-  function findProduct(record) {
-    return api('/mes/md/mditem/list?pageNum=1&pageSize=10&itemCode=' + encodeURIComponent(record['产品编号']))
+  function findProduct(record, page) {
+    page = page || 1
+    return api('/mes/md/mditem/list?pageNum=' + page + '&pageSize=100&itemCode=' + encodeURIComponent(record['产品编号']))
       .then(function (response) {
         var rows = response.rows || response.data || []
-        return Array.isArray(rows) ? rows[0] : null
+        if (!Array.isArray(rows)) return null
+        var product = rows.find(function (item) { return item.itemCode === record['产品编号'] })
+        if (product) return product
+        if (rows.length && page * 100 < Number(response.total)) return findProduct(record, page + 1)
+        return null
       })
   }
 
@@ -267,7 +272,7 @@
       button.disabled = false
       button.classList.remove('is-loading')
       button.querySelector('span').textContent = '一键导入'
-      throw error
+      throw new Error('已成功导入 ' + completed + '/' + rows.length + ' 条；第 ' + (completed + 2) + ' 行失败：' + error.message)
     })
   }
 

@@ -5,6 +5,10 @@
   var processedMessages = new WeakSet()
   var pendingSchedule = null
   var ignoreNextSuccessToast = false
+  var memoryOrders = []
+  var storageUnavailable = false
+  var activeSyncs = []
+  window.__MES_WAIT_FOR_FEEDBACK_SYNC__ = function () { return Promise.allSettled(activeSyncs.slice()) }
 
   function pad(value) { return String(value).padStart(2, '0') }
 
@@ -15,8 +19,13 @@
   }
 
   function readOrders() {
+    var rows = memoryOrders
     try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]').map(function (item) {
+      var raw = storageUnavailable ? null : localStorage.getItem(STORAGE_KEY)
+      if (raw) rows = JSON.parse(raw)
+    } catch (error) { /* Preserve in-memory orders if browser storage is unavailable. */ }
+    if (!Array.isArray(rows)) return []
+    return rows.filter(function (item) { return item && typeof item === 'object' }).map(function (item) {
         if (item.feedbackChannel === 'AUTO_SCHEDULE') {
           item.status = 'IN_PROGRESS'
           item.userName = ''
@@ -26,10 +35,13 @@
         }
         return item
       })
-    } catch (error) { return [] }
   }
 
-  function writeOrders(rows) { localStorage.setItem(STORAGE_KEY, JSON.stringify(rows.slice(0, 100))) }
+  function writeOrders(rows) {
+    memoryOrders = rows.slice(0, 100)
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(memoryOrders)) }
+    catch (error) { storageUnavailable = true }
+  }
 
   function getToken() {
     var match = document.cookie.match(/(?:^|;\s*)Admin-Token=([^;]+)/)
@@ -141,9 +153,11 @@
   }
 
   function syncOrderToBackend(order) {
+    if (window.__MES_DEMO_RESETTING__) return Promise.resolve()
     if (!order.workorderId) return Promise.reject(new Error('未匹配到生产工单'))
     return request('/mes/pro/protask/list?pageNum=1&pageSize=100&workorderId=' + encodeURIComponent(order.workorderId))
       .then(function (body) {
+        if (window.__MES_DEMO_RESETTING__) return null
         var task = (body.rows || [])[0]
         if (!task) throw new Error('生产任务尚未生成')
         var payload = Object.assign({}, order, {
@@ -167,20 +181,26 @@
         return request('/mes/pro/feedback', { method: 'POST', body: JSON.stringify(payload) })
       })
       .then(function () {
+        if (window.__MES_DEMO_RESETTING__) return
         order.backendSynced = true
         saveOrder(order)
       })
   }
 
   function createFeedbackOrder(detail) {
+    if (window.__MES_DEMO_RESETTING__) return
     var order = normalizeOrder(detail)
+    if (readOrders().some(function (item) { return item.linkId === order.linkId })) return
     saveOrder(order)
     var attempts = 0
     function trySync() {
+      if (window.__MES_DEMO_RESETTING__) return
+      if (!readOrders().some(function (item) { return item.linkId === order.linkId })) return
       attempts += 1
-      syncOrderToBackend(order).catch(function () {
-        if (attempts < 5) window.setTimeout(trySync, attempts * 800)
-      })
+      var sync = syncOrderToBackend(order).catch(function () {
+        if (!window.__MES_DEMO_RESETTING__ && attempts < 5) window.setTimeout(trySync, attempts * 800)
+      }).finally(function () { activeSyncs = activeSyncs.filter(function (item) { return item !== sync }) })
+      activeSyncs.push(sync)
     }
     window.setTimeout(trySync, 300)
     window.dispatchEvent(new CustomEvent('schedule-feedback-created', { detail: order }))
@@ -360,6 +380,7 @@
   })
 
   function scan() {
+    if (window.__MES_DEMO_RESETTING__) return
     detectScheduleSuccess()
     injectPendingFeedbackRows()
     bindPendingOrderActions()

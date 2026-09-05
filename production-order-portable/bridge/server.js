@@ -110,7 +110,7 @@ app.get('/mes/pro/workorder/list', async (_req, res) => {
  */
 app.put('/mes/pro/protask/:workorderId', async (req, res) => {
   const workorderId = Number(req.params.workorderId)
-  if (!workorderId) {
+  if (!Number.isSafeInteger(workorderId) || workorderId <= 0) {
     return res.status(400).json(fail('invalid workorderId', 400))
   }
 

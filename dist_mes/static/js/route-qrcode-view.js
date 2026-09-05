@@ -48,7 +48,7 @@
       script.src = QR_LIB_URL
       script.async = true
       script.onload = function () { resolve() }
-      script.onerror = function () { reject(new Error('Failed to load QR library')) }
+      script.onerror = function () { script.remove(); qrLibPromise = null; reject(new Error('Failed to load QR library')) }
       document.head.appendChild(script)
     })
     return qrLibPromise
@@ -74,6 +74,12 @@
     })
   }
 
+  function escapeHtml(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function (character) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]
+    })
+  }
+
   function closeModal() {
     var modal = document.getElementById(MODAL_ID)
     if (modal) modal.remove()
@@ -94,8 +100,8 @@
         '<div class="route-qrcode-body">' +
           '<div class="route-qrcode-canvas" id="route-qrcode-canvas"></div>' +
           '<div class="route-qrcode-meta">' +
-            '<div><strong>\u5de5\u827a\u8def\u7ebf\u7f16\u53f7\uff1a</strong>' + route.routeCode + '</div>' +
-            '<div><strong>\u5de5\u827a\u8def\u7ebf\u540d\u79f0\uff1a</strong>' + route.routeName + '</div>' +
+            '<div><strong>\u5de5\u827a\u8def\u7ebf\u7f16\u53f7\uff1a</strong>' + escapeHtml(route.routeCode) + '</div>' +
+            '<div><strong>\u5de5\u827a\u8def\u7ebf\u540d\u79f0\uff1a</strong>' + escapeHtml(route.routeName) + '</div>' +
             '<div>\u626b\u7801\u53ef\u67e5\u8be2\u4ea7\u54c1\u751f\u4ea7\u3001\u8d28\u68c0\u53ca\u5165\u5e93\u4fe1\u606f</div>' +
           '</div>' +
         '</div>' +
@@ -107,7 +113,7 @@
     document.body.appendChild(modal)
 
     loadQrLibrary().then(function () {
-      var host = document.getElementById('route-qrcode-canvas')
+      var host = modal.isConnected && modal.querySelector('#route-qrcode-canvas')
       if (!host || !window.QRCode) return
       host.innerHTML = ''
       new window.QRCode(host, {
@@ -119,7 +125,7 @@
         correctLevel: window.QRCode.CorrectLevel.M
       })
     }).catch(function () {
-      var host = document.getElementById('route-qrcode-canvas')
+      var host = modal.isConnected && modal.querySelector('#route-qrcode-canvas')
       if (host) host.textContent = 'QR library load failed'
     })
   }
@@ -159,7 +165,8 @@
     button.addEventListener('click', function (event) {
       event.preventDefault()
       event.stopPropagation()
-      openModal(route)
+      var currentRoute = readRowData(row)
+      if (currentRoute && currentRoute.routeCode) openModal(currentRoute)
     })
 
     insertActionButton(actionCell, button)

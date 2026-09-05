@@ -82,7 +82,7 @@
     }
     if (!document.querySelector('script[data-platform-updater]')) {
       var script = document.createElement('script')
-      script.src = '/static/js/platform-updater.js?v=20260904-auto-review-flow'
+      script.src = '/static/js/platform-updater.js?v=20260905-bugfix'
       script.async = false
       script.setAttribute('data-platform-updater', 'true')
       script.addEventListener('load', function () { script.setAttribute('data-loaded', 'true') })
@@ -94,7 +94,7 @@
   function loadScheduleFeedbackLink() {
     if (document.querySelector('script[data-schedule-feedback-link]')) return
     var script = document.createElement('script')
-    script.src = '/static/js/schedule-feedback-link.js?v=20260903-auto-feedback-view'
+    script.src = '/static/js/schedule-feedback-link.js?v=20260905-demo-reset-v7'
     script.async = false
     script.setAttribute('data-schedule-feedback-link', 'true')
     document.head.appendChild(script)
@@ -103,7 +103,7 @@
   function loadDashboardOrderSync() {
     if (document.querySelector('script[data-dashboard-order-sync]')) return
     var script = document.createElement('script')
-    script.src = '/static/js/dashboard-order-sync.js?v=20260903-production-page-gate'
+    script.src = '/static/js/dashboard-order-sync.js?v=20260905-demo-reset-v7'
     script.async = false
     script.setAttribute('data-dashboard-order-sync', 'true')
     document.head.appendChild(script)
@@ -269,6 +269,12 @@
     return button.querySelector('span') || button
   }
 
+  function escapeHtml(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function (character) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]
+    })
+  }
+
   function getSelectedIndex(container) {
     var cards = Array.prototype.slice.call(container.querySelectorAll('.product-image--selectable'))
     var selected = container.querySelector('.product-image--selectable.is-selected')
@@ -405,6 +411,8 @@
       orderButton.classList.remove('is-plan-ready')
       orderButton.disabled = false
       confirmButton.disabled = true
+      var vm = findViewModel(container)
+      if (vm) vm.schedulePreview = {}
     }
 
     function generatePlan() {
@@ -426,13 +434,18 @@
       }
       var load = Math.min(92, 58 + selectedIndex * 7 + Math.ceil(quantity / 100))
       var score = lineValue === 'auto' ? 96 - selectedIndex : 89
-      var planCode = 'FSP-' + formatDate(new Date(), false).replace(/-/g, '') + '-' + String(Date.now()).slice(-4)
+      var planCode = 'FSP-' + formatDate(new Date(), false).replace(/-/g, '') + '-' + String(Date.now())
+      var vm = findViewModel(container)
+      if (vm) vm.schedulePreview = {
+        planCode: planCode, workorderCode: getWorkorder(container), line: lineName,
+        startTime: formatDate(start, true), endTime: formatDate(end, true)
+      }
 
       result.innerHTML =
         '<div class="flex-result-head"><div><span>方案编号</span><strong>' + planCode + '</strong></div><em>可执行 · 匹配度 ' + score + '% · 产线负载 ' + load + '%</em></div>' +
         '<div class="flex-result-grid">' +
-          '<div><span>排产品类</span><strong>' + getSelectedName(container) + ' × ' + quantity + '</strong></div>' +
-          '<div><span>匹配工单</span><strong>' + getWorkorder(container) + '</strong></div>' +
+          '<div><span>排产品类</span><strong>' + escapeHtml(getSelectedName(container)) + ' × ' + quantity + '</strong></div>' +
+          '<div><span>匹配工单</span><strong>' + escapeHtml(getWorkorder(container)) + '</strong></div>' +
           '<div><span>推荐产线</span><strong>' + lineName + '</strong></div>' +
           '<div><span>承诺交期</span><strong>' + deadline.value + '</strong></div>' +
           '<div><span>预计开始</span><strong>' + formatDate(start, true) + '</strong></div>' +
@@ -504,6 +517,12 @@
       if (!state.generated || state.calculating) return
       state.allowSubmitOnce = true
       orderButton.click()
+    })
+    window.addEventListener('flex-schedule-order-success', resetPlan)
+    var owner = findViewModel(container)
+    if (owner && owner.$once) owner.$once('hook:beforeDestroy', function () {
+      if (state.timer) window.clearInterval(state.timer)
+      window.removeEventListener('flex-schedule-order-success', resetPlan)
     })
     getButtonLabel(orderButton).textContent = '生成排产方案'
     getButtonLabel(confirmButton).textContent = '确认方案并下发'

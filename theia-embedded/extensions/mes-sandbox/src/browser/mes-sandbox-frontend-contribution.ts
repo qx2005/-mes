@@ -25,6 +25,7 @@ export class MesSandboxFrontendContribution implements CommandContribution, Fron
 
   protected parentOrigin: string | undefined;
   protected commands: CommandRegistry | undefined;
+  protected discarding: Promise<void> = Promise.resolve();
 
   registerCommands(commands: CommandRegistry): void {
     this.commands = commands;
@@ -49,6 +50,19 @@ export class MesSandboxFrontendContribution implements CommandContribution, Fron
   onStart(_app: FrontendApplication): void {
     registerMesSourceLanguages();
     registerPresentationHighlights();
+    window.addEventListener('storage', event => {
+      if (event.key !== 'mes-ide-reset-start-v1' && event.key !== 'mes-demo-reset-completed-v1') return;
+      this.discarding = this.discarding.then(async () => {
+        await Promise.all(this.editors.all.map(async editor => {
+          await editor.saveable.revert?.();
+          editor.dispose();
+        }));
+        Object.keys(localStorage).filter(key => key.startsWith('theia:/ide')).forEach(key => localStorage.removeItem(key));
+      });
+      if (event.key === 'mes-demo-reset-completed-v1') {
+        void this.discarding.then(() => window.location.reload());
+      }
+    });
 
     try {
       this.parentOrigin = document.referrer ? new URL(document.referrer).origin : undefined;
